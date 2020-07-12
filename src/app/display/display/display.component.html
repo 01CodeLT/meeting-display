@@ -1,0 +1,14 @@
+<div class="display" [ngStyle]="{'font-size' : (settings.fontSize + 'px'), 'line-height' : (settings.lineHeight + 'px')}">
+
+    <div class="text-clip" [ngStyle]="{'max-height': (settings.textHeight + 'px')}">
+        <div #textElement class="text" [ngStyle]="{'margin-top': (-settings.textY + 'px')}" [innerHTML]="slideshow.slides[slideshow.active]?.text"></div>
+    </div>
+    
+    <small class="name">{{ slideshow.slides[slideshow.active]?.name }}</small>
+
+    <div class="publication">
+        <img [src]="('app://' + epub?.image) | sanitizer : 'url'">
+        <h5>{{ epub?.title }}</h5>
+    </div>
+    
+</div>

@@ -1,0 +1,39 @@
+.display {
+    height: 100vh;
+    margin: -15px;
+    color: #3e3e3e;
+    text-align: center;
+
+    .name {    
+        top: 78%;
+        right: 6%;
+        font-weight: 600;
+        position: absolute;
+    }
+    .text-clip {
+        top: 50%;
+        margin: 0;
+        padding: 0px 6%;
+        overflow: hidden;
+        position: absolute;
+        transform: translateY(-50%);
+
+        ::ng-deep p {
+            font-size: inherit !important;
+            line-height: inherit !important;
+        }
+    }
+}
+.publication {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+
+    img {
+        height: 80px;
+    }
+    h5 {
+        margin-top: 0px;
+        max-width: 110px;
+    }
+}

@@ -1,0 +1,17 @@
+<div class="container">
+  <h1 class="float-left">Uploaded ePubs</h1>
+  <button class="ui button float-right" (click)="uploadEpub()" title="Import a new epub file for display">Import epub</button>
+  <div class="ui grid books">
+    <div *ngFor="let epub of epubs" (click)="openEpub(epub)" class="three wide column">
+      <div class="ui card">
+        <div class="image">
+          <img [src]="('app://' + epub.image) | sanitizer : 'url'">
+        </div>
+        <div class="content">
+          <p>{{ epub.title }}</p>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication and click import epub.</p>
+  </div>
+</div>

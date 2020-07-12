@@ -1,0 +1,65 @@
+html {
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
+h1 {
+    width: fit-content;
+    color: #828282;
+    padding-bottom: 4px;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #3e96ca;
+}
+.d-block {
+    display: block;
+}
+.d-flex {
+    display: flex;
+}
+.mb-0 {
+    margin-bottom: 0px;
+}
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+.dropdown.active .menu {
+    display: block;
+}
+.container {
+    padding: 30px;
+}
+.btn-back {
+    top: 30px;
+    position: absolute;
+}
+.info-tip {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+}
+
+/* Dragula css */
+// .gu-mirror {
+//   position: fixed !important;
+//   margin: 0 !important;
+//   z-index: 9999 !important;
+//   opacity: 0.8;
+//   //-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+//   filter: alpha(opacity=80);
+// }
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
