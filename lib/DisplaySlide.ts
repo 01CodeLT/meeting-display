@@ -1,7 +1,7 @@
 import * as url from 'url';
 import * as path from 'path';
-import { mainWindow, serve } from '../main';
-import { BrowserWindow, ipcMain, screen } from 'electron';
+import { serve } from '../main';
+import { BrowserWindow, screen } from 'electron';
 
 let epub;
 let slides = [];
@@ -56,8 +56,9 @@ export function toggleDisplay() {
                 displayWindow.loadURL('http://localhost:4200/display');
             } else {
                 displayWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'dist/index.html/#display'),
+                    pathname: path.join(__dirname, '../dist/index.html'),
                     protocol: 'file:',
+                    hash: 'display',
                     slashes: true
                 }));
             }

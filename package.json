@@ -18,7 +18,7 @@
     "start": "npm-run-all -p electron:serve ng:serve",
     "electron:serve-tsc": "tsc -p tsconfig-serve.json",
     "build": "npm run electron:serve-tsc && ng build --base-href ./",
-    "deploy:app": "npm run build:prod && electron-builder build --win --publish always",
+    "deploy:app": "npm run build:prod && electron-builder build --win --config electron-builder.yml --publish always",
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build": "npm run build:prod && electron-builder build --config electron-builder.yml",

@@ -45,7 +45,7 @@ const routes: Routes = [
     SharedModule,
     NgxElectronModule,
     DragulaModule.forRoot(),
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, { useHash: true })
   ],
   providers: [],
   bootstrap: [AppComponent]

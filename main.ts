@@ -6,7 +6,7 @@ import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron'
 import { toggleDisplay, updateSlides, controlDisplay } from './lib/DisplaySlide';
 import { uploadEpub, listEpub, getEpub, parseEpubPage } from './lib/EpubManager';
 
-debug({ showDevTools: true, isEnabled: true });
+//debug({ showDevTools: true, isEnabled: true });
 
 export var mainWindow: BrowserWindow = null;
 export const storagePath = app.getPath('userData') + '/storage/';
@@ -34,7 +34,6 @@ function createWindow(): BrowserWindow {
   app.commandLine.appendSwitch('ignore-certificate-errors');
 
   //Electron config
-  console.log('outside serve');
   if (serve) {
     mainWindow.webContents.openDevTools();
     require('electron-reload')(__dirname, {
@@ -42,8 +41,6 @@ function createWindow(): BrowserWindow {
     });
     mainWindow.loadURL('http://localhost:4200');
   } else {
-    console.log('loading');
-    console.log(__dirname, 'dist/index.html');
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
@@ -87,12 +84,9 @@ function createWindow(): BrowserWindow {
 
 try {
 
-  console.log('Line 87');
   app.allowRendererProcessReuse = true;
 
-  console.log('Line 90');
   app.on('ready', () => {
-    console.log('Line 92');
     //Register custom file protocol
     protocol.registerFileProtocol('app', (request, callback) => {
       const url = request.url.substr(6, request.url.length)
@@ -101,9 +95,7 @@ try {
       if (error) console.error('Failed to register protocol')
     });
 
-    console.log('Line 101');
     //400 ms - fixes black background issue see https://github.com/electron/electron/issues/15947
-    console.log('Line 103');
     setTimeout(createWindow, 400);
   });
 
@@ -116,7 +108,6 @@ try {
 
   // Create window on activate
   app.on('activate', () => {
-    console.log('Line 116');
     if (mainWindow === null) {
       createWindow();
     }
@@ -124,8 +115,6 @@ try {
 
 } catch (e) {
   // Catch Error
-  console.log(e);
-  console.log('Line 124');
   throw e;
 }
 
