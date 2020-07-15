@@ -1,7 +1,7 @@
 {
   "name": "meeting-display",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "Basic application for displaying books & magazines in epub format from the jw website in congregation meetings.",
   "author": {
     "name": "Luke Tinnion",
     "email": "luke.tinnion@icloud.com"
@@ -9,29 +9,23 @@
   "keywords": [],
   "main": "main.js",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/01CodeLT/meeting-display.git"
-  },
   "scripts": {
-    "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
-    "start": "npm-run-all -p electron:serve ng:serve",
-    "build": "npm run electron:serve-tsc && ng build --base-href ./",
-    "build:dev": "npm run build -- -c dev",
-    "build:prod": "npm run build -- -c production",
-    "build:app": "electron-builder build --mac --win --publish never",
-    "deploy:app": "electron-builder build --mac --win --publish always",
     "ng:serve": "ng serve",
     "ng:serve:web": "ng serve -c web -o",
+    "build:dev": "npm run build -- -c dev",
+    "build:prod": "npm run build -- -c production",
+    "start": "npm-run-all -p electron:serve ng:serve",
     "electron:serve-tsc": "tsc -p tsconfig-serve.json",
+    "build": "npm run electron:serve-tsc && ng build --base-href ./",
+    "deploy:app": "npm run build:prod && electron-builder build --win --publish always",
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
-    "electron:build": "npm run build:prod && electron-builder build",
-    "test": "ng test --watch=false",
-    "test:watch": "ng test",
+    "electron:build": "npm run build:prod && electron-builder build --config electron-builder.yml",
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
     "lint": "ng lint"
   },
   "devDependencies": {
@@ -93,8 +87,10 @@
   "dependencies": {
     "@gxl/epub-parser": "2.0.2",
     "@types/nedb": "1.8.9",
+    "electron-debug": "3.1.0",
     "electron-updater": "4.3.1",
     "extract-zip": "2.0.1",
+    "glob": "7.1.6",
     "nedb": "1.8.0",
     "ng2-dragula": "2.1.1",
     "ngx-electron": "2.2.0",
