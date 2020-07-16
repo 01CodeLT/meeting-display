@@ -1,4 +1,4 @@
-# Meeting display
+# JW Meeting display
 
 This is a basic application for displaying books & magazines in epub format from the jw website in congregation meetings. If you have any issues or feature requests please add them in the issues section.
 
