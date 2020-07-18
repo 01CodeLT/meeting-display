@@ -10,6 +10,7 @@ import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   epubs = [];
+  loading = true;
 
   constructor(
     private zone: NgZone,
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
     this.electronService.ipcRenderer.send('epub-list');
     this.electronService.ipcRenderer.on('epub-list', (event, epubs) => {
       this.epubs = epubs;
+      this.loading = false;
       this.changeDetector.detectChanges();
     });
   }
@@ -34,6 +36,10 @@ export class HomeComponent implements OnInit {
 
   uploadEpub() {
     this.electronService.ipcRenderer.send('epub-upload');
+    this.electronService.ipcRenderer.once('epub-upload', (event) => {
+      this.loading = true;
+      this.changeDetector.detectChanges();
+    });
   }
 
 }

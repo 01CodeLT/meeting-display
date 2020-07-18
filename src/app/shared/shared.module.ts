@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { NgxElectronModule } from 'ngx-electron';
 import { SanitizerPipe } from './pipes/santizer.pipe';
 
+//NG Semantic ui
+import { SuiDropdownModule, SuiSelectModule, SuiDimmerModule } from 'ng2-semantic-ui';
+
 @NgModule({
   declarations: [
     SanitizerPipe
@@ -11,12 +14,20 @@ import { SanitizerPipe } from './pipes/santizer.pipe';
   imports: [
     CommonModule, 
     FormsModule, 
-    NgxElectronModule
+    NgxElectronModule,
+
+    SuiDropdownModule,
+    SuiSelectModule,
+    SuiDimmerModule
   ],
   exports: [
     FormsModule,
     SanitizerPipe,
-    NgxElectronModule
+    NgxElectronModule,
+
+    SuiDropdownModule,
+    SuiSelectModule,
+    SuiDimmerModule
   ]
 })
 export class SharedModule {}

@@ -15,3 +15,7 @@
     <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication and click import epub.</p>
   </div>
 </div>
+
+<sui-dimmer class="page" [isDimmed]="loading">
+  <div class="ui text loader">One moment please...</div>
+</sui-dimmer>

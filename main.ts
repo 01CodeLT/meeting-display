@@ -3,8 +3,8 @@ import * as path from 'path';
 import debug = require('electron-debug');
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron';
-import { toggleDisplay, updateSlides, controlDisplay } from './lib/DisplaySlide';
 import { uploadEpub, listEpub, getEpub, parseEpubPage } from './lib/EpubManager';
+import { toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
 
 //debug({ showDevTools: true, isEnabled: true });
 
@@ -31,6 +31,7 @@ function createWindow(): BrowserWindow {
     title: 'Meeting display',
     icon: __dirname + '/icon.ico'
   });
+  mainWindow.removeMenu();
   app.commandLine.appendSwitch('ignore-certificate-errors');
 
   //Electron config
@@ -125,5 +126,6 @@ ipcMain.on('epub-get', (event, id) => { getEpub(id); });
 ipcMain.on('slides-get', (event) => { updateSlides(); });
 ipcMain.on('slides-display', (event) => { toggleDisplay(); });
 ipcMain.on('epub-get-page', (event, id, page) => { parseEpubPage(id, page); });
+ipcMain.on('slides-options', (event, options = null) => { updateDisplayOptions(options); });
 ipcMain.on('slides-control', (event, action, ...args) => { controlDisplay(action, ...args); });
 ipcMain.on('slides-update', (event, selectedEpub = null, slideList = null) => { updateSlides(selectedEpub, slideList); });

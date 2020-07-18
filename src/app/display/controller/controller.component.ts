@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from 'ngx-electron';
+import { clearTimeout, setTimeout } from 'timers';
 
 export interface Epub {
   id: string;
@@ -30,7 +31,7 @@ export class ControllerComponent implements OnInit {
 
   epub: Epub;
   epubPage = { content: [] };
-  slideshow = { slides: [], active: 0 };
+  slideshow = { slides: [], active: 0, options: null };
 
   constructor(
     private dragulaService: DragulaService,
@@ -40,6 +41,7 @@ export class ControllerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    //Get epub content
     this.activatedRoute.params.subscribe((params: Params) => {
       this.electronService.ipcRenderer.send('epub-get', params['id']);
       this.electronService.ipcRenderer.once('epub-get', (event, epub) => {
@@ -49,6 +51,7 @@ export class ControllerComponent implements OnInit {
       });
     });
 
+    //Setup dragula
     this.dragulaService.createGroup('DRAGULA_FACTS', {
       copy: (el, source) => {
         return source.id === 'left';
@@ -60,6 +63,13 @@ export class ControllerComponent implements OnInit {
         // To avoid dragging from right to left container
         return target.id !== 'left';
       }
+    });
+
+    //Get display options
+    this.electronService.ipcRenderer.send('slides-options');
+    this.electronService.ipcRenderer.on('slides-options', (event, options) => {
+      this.slideshow.options = options;
+      this.changeDetector.detectChanges();
     });
   }
 
@@ -92,6 +102,11 @@ export class ControllerComponent implements OnInit {
       author: this.epub.author
     }, this.slideshow.slides);
   }
+
+  updateTimeout;
+  updateSlideOptions() {
+    this.electronService.ipcRenderer.send('slides-options', this.slideshow.options);
+  }
   
   addAllSlides() {
     //Filter slides
@@ -118,5 +133,9 @@ export class ControllerComponent implements OnInit {
 
   controlSlides(action, ...args) {
     this.electronService.ipcRenderer.send('slides-control', action, ...args);
+  }
+
+  ngOnDestroy() {
+    this.dragulaService.destroy('DRAGULA_FACTS');
   }
 }

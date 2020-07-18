@@ -6,7 +6,7 @@ import { mainWindow, storagePath } from '../main';
 import extract = require('extract-zip');
 import { parse } from 'node-html-parser';
 import { parseEpub } from '@gxl/epub-parser';
-import { dialog, app, ipcMain } from 'electron';
+import { dialog, app } from 'electron';
 
 const storage = new NeDB({ filename: app.getPath('userData') + '/storage/epubs', autoload: true });
 
@@ -14,9 +14,13 @@ export function uploadEpub() {
     //Open Epub
     dialog.showOpenDialog({ 
         properties: ['openFile'], 
-        filters: [{ name: 'ePub files', extensions: ['epub', 'jwpub'] }],
+        filters: [{ name: 'ePub files', extensions: ['epub'] }],
     }).then((result) => {
         if(result.canceled == false) {
+            //Activate loading state
+            mainWindow.webContents.send('epub-upload');
+
+            //Import epub
             parseEpub(result.filePaths[0], {
                 type: 'path',
             }).then((ePub) => {
@@ -34,6 +38,7 @@ export function uploadEpub() {
                             //Insert data
                             storage.insert({
                                 id: filename,
+                                type: 'pub',
                                 title: ePub.info.title,
                                 author: ePub.info.publisher,
                                 structure: JSON.stringify(ePub.structure),
@@ -95,9 +100,14 @@ export function parseEpubPage(id, page) {
             
             //Add scriptures below (child elements won't work in dragula)
             (paragraph.toString().match(/(href="#citation)([0-9]{0,3})/gm) || []).forEach((scripture) => {
-                content.push(scriptures[scripture.replace('href="#', '')]);
+                let citationId = scripture.replace('href="#', '');
+                content.push(scriptures[citationId]);
+                delete scriptures[citationId];
             });
         });
+        
+        //Dump unused scriptures at end of content array
+        content = content.concat(Object.values(scriptures));
 
         //Return data
         mainWindow.webContents.send('epub-get-page', {

@@ -22,9 +22,9 @@
 }
 
 .list {
-    height: 80vh;
     overflow-y: auto;
     padding-right: 15px;
+    height: calc(100vh - 16rem);
 
     .item {
         cursor: grab;
@@ -57,4 +57,11 @@
     .icon {
         cursor: pointer;
     }
+}
+
+::ng-deep .dropdown ::ng-deep .buttons {
+    width: auto;
+    display: flex;
+    margin: 1.14285714rem .78571429rem;
+    min-width: 10rem;
 }

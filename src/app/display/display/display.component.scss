@@ -1,8 +1,6 @@
 .display {
     height: 100vh;
     margin: -15px;
-    color: #3e3e3e;
-    text-align: center;
 
     .name {    
         top: 78%;
@@ -13,7 +11,7 @@
     .text-clip {
         top: 50%;
         margin: 0;
-        padding: 0px 6%;
+        padding: 0px 8%;
         overflow: hidden;
         position: absolute;
         transform: translateY(-50%);
@@ -22,9 +20,14 @@
             font-size: inherit !important;
             line-height: inherit !important;
         }
+        ::ng-deep sup {
+            top: -.8em;
+            font-size: 50%;
+        }
     }
 }
 .publication {
+    text-align: center;
     position: fixed;
     bottom: 15px;
     left: 15px;

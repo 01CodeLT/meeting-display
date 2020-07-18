@@ -53,6 +53,35 @@
                             <i class="icon angle right"></i>
                         </button>
                     </div>
+                    <div class="item">
+                        <div class="ui icon top right pointing dropdown button" suiDropdown>
+                            <i class="settings icon" title="Display settings"></i>
+                            <div class="menu" suiDropdownMenu>
+                                <div class="header">Font size</div>
+                                <div class="ui input" title="Changing font size during slide display restarts the slideshow from the beginning!">
+                                    <input type="number" [(ngModel)]="slideshow.options.fontSize" (keyup)="updateSlideOptions()" (change)="updateSlideOptions()">
+                                </div>
+                                <div class="header">Font color</div>
+                                <div class="ui input">
+                                    <input type="color" [(ngModel)]="slideshow.options.fontColor" (input)="updateSlideOptions()">
+                                </div>
+                                <div class="header">Font link color</div>
+                                <div class="ui input">
+                                    <input type="color" [(ngModel)]="slideshow.options.fontLinkColor" (input)="updateSlideOptions()">
+                                </div>
+                                <div class="header">Text alignment</div>
+                                <div class="ui icon buttons">
+                                    <button (click)="slideshow.options.textAlign = 'left'; updateSlideOptions();" class="ui button"><i class="align left icon"></i></button>
+                                    <button (click)="slideshow.options.textAlign = 'center'; updateSlideOptions();" class="ui button"><i class="align center icon"></i></button>
+                                    <button (click)="slideshow.options.textAlign = 'right'; updateSlideOptions();" class="ui button"><i class="align right icon"></i></button>
+                                </div>
+                                <div class="header">Display on</div>
+                                <select class="ui dropdown input" [(ngModel)]="slideshow.options.display.selected" (change)="updateSlideOptions()">
+                                    <option *ngFor="let option of slideshow.options.display.list" [ngValue]="option">PC Display: {{ option }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="ui relaxed divided list" dragula="DRAGULA_FACTS" [(dragulaModel)]="slideshow.slides" (dragulaModelChange)="updateSlides()" id="right">
