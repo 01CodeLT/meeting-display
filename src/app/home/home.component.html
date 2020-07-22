@@ -1,9 +1,15 @@
 <div class="container">
   <h1 class="float-left">Uploaded ePubs</h1>
   <button class="ui button float-right" (click)="uploadEpub()" title="Import a new epub file for display">Import epub</button>
+  
+  <div class="ui icon input search">
+    <i class="search icon"></i>
+    <input type="text" [(ngModel)]="filters.title"(keyup)="filterEpubList();" placeholder="Search by name...">
+  </div>
+
   <div class="ui grid books">
-    <div *ngFor="let epub of epubs" (click)="openEpub(epub)" class="three wide column">
-      <div class="ui card">
+    <div *ngFor="let epub of epubs" class="three wide column">
+      <div class="ui card" (click)="openEpub(epub)">
         <div class="image">
           <img [src]="('app://' + epub.image) | sanitizer : 'url'">
         </div>
@@ -11,6 +17,7 @@
           <p>{{ epub.title }}</p>
         </div>
       </div>
+      <i (click)="removeEpub(epub.id)" class="trash icon red"></i>
     </div>
     <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication and click import epub.</p>
   </div>

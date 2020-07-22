@@ -1,6 +1,6 @@
 {
   "name": "meeting-display",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Basic application for displaying books & magazines in epub format from the jw website in congregation meetings.",
   "author": {
     "name": "Luke Tinnion",
@@ -95,6 +95,7 @@
     "ng2-dragula": "2.1.1",
     "ng2-semantic-ui": "0.9.7",
     "ngx-electron": "2.2.0",
-    "node-html-parser": "1.2.20"
+    "node-html-parser": "1.2.20",
+    "nucleus-nodejs": "3.0.6"
   }
 }

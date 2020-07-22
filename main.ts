@@ -3,10 +3,12 @@ import * as path from 'path';
 import debug = require('electron-debug');
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron';
-import { uploadEpub, listEpub, getEpub, parseEpubPage } from './lib/EpubManager';
 import { toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
+import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, parseEpubPage, removeEpub } from './lib/EpubManager';
 
-//debug({ showDevTools: true, isEnabled: true });
+//Setup nucleaus analytics - anonymous
+const Nucleus = require('nucleus-nodejs');
+Nucleus.init('5f13691da5d05e6842655618');
 
 export var mainWindow: BrowserWindow = null;
 export const storagePath = app.getPath('userData') + '/storage/';
@@ -55,7 +57,7 @@ function createWindow(): BrowserWindow {
   });
 
   //Check for updates
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.webContents.on('did-finish-load', () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
 
@@ -97,6 +99,7 @@ try {
     });
 
     //400 ms - fixes black background issue see https://github.com/electron/electron/issues/15947
+    Nucleus.appStarted();
     setTimeout(createWindow, 400);
   });
 
@@ -120,11 +123,13 @@ try {
 }
 
 // Set api routes
-ipcMain.on('epub-list', () => { listEpub(); });
+ipcMain.on('epub-list', () => { listEpubs(); });
 ipcMain.on('epub-upload', () => { uploadEpub(); });
 ipcMain.on('epub-get', (event, id) => { getEpub(id); });
 ipcMain.on('slides-get', (event) => { updateSlides(); });
+ipcMain.on('epub-remove', (event, id) => { removeEpub(id); });
 ipcMain.on('slides-display', (event) => { toggleDisplay(); });
+ipcMain.on('epub-list-filter', (event, filters) => { listEpubsFiltered(filters); });
 ipcMain.on('epub-get-page', (event, id, page) => { parseEpubPage(id, page); });
 ipcMain.on('slides-options', (event, options = null) => { updateDisplayOptions(options); });
 ipcMain.on('slides-control', (event, action, ...args) => { controlDisplay(action, ...args); });

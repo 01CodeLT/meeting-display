@@ -46,7 +46,7 @@ export function uploadEpub() {
                             });
 
                             //Send data to ui
-                            listEpub();
+                            listEpubs();
                         });
                     });
                 });
@@ -55,10 +55,38 @@ export function uploadEpub() {
     });
 }
 
-export function listEpub() {
+export function removeEpub(id) {
+    dialog.showMessageBox(mainWindow, {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: 'Confirm',
+        message: 'Are you sure you want to delete this publication?'
+    }).then((result) => {
+        if(result.response == 0) { 
+            fs.rmdir(`${storagePath}${id}`, { recursive: true }, () => {
+                storage.remove({ id: id }, {}, (err) => {
+                    mainWindow.webContents.send('epub-remove', true);
+                });
+            });
+        } else {
+            mainWindow.webContents.send('epub-remove', false);
+        }
+    });
+}
+
+export function listEpubs() {
     // Find all documents in the collection
     storage.find({}, (err, docs) => {
-        mainWindow.webContents.send('epub-list', docs);
+        mainWindow.webContents.send('epub-list', docs || []);
+    });
+}
+
+export function listEpubsFiltered(filters) {
+    // Find all documents in the collection
+    console.log(filters);
+    storage.find({ title: { $regex: new RegExp(filters.title.toLowerCase(), 'i') } }, (err, docs) => {
+        console.log(docs);
+        mainWindow.webContents.send('epub-list', docs || []);
     });
 }
 
@@ -84,7 +112,7 @@ export function parseEpubPage(id, page) {
             scriptures[scripture.getAttribute('id')] = {
                 type: 'scripture',
                 name: scripture.querySelector('strong').text,
-                text: scripture.querySelector('.extScrpCiteTxt').toString().replace(/<a(.*?)(<\/strong>)/g, '')
+                text: scripture.querySelector('.extScrpCiteTxt') ? scripture.querySelector('.extScrpCiteTxt').toString().replace(/<a(.*?)(<\/strong>)/g, '') : ''
             };
         });
 

@@ -40,7 +40,7 @@
         <div class="six wide column paragraphs">
             <div class="ui top attached menu">
                 <div class="item">
-                    <button class="ui button" (click)="displaySlides()" title="Show slideshow on second screen">Display slides</button>
+                    <button class="ui button" (click)="displaySlides()" title="Show/close slideshow on second screen">Toggle display</button>
                 </div>
                 <div class="right menu">
                     <div class="item">
@@ -61,6 +61,7 @@
                                 <div class="ui input" title="Changing font size during slide display restarts the slideshow from the beginning!">
                                     <input type="number" [(ngModel)]="slideshow.options.fontSize" (keyup)="updateSlideOptions()" (change)="updateSlideOptions()">
                                 </div>
+                                <p class="message error">Changing font size during slide display restarts the slideshow from the beginning!</p>
                                 <div class="header">Font color</div>
                                 <div class="ui input">
                                     <input type="color" [(ngModel)]="slideshow.options.fontColor" (input)="updateSlideOptions()">

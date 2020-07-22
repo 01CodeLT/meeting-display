@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
 
   epubs = [];
   loading = true;
+  filters = { title: '' }
 
   constructor(
     private zone: NgZone,
@@ -22,10 +23,19 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.electronService.ipcRenderer.send('epub-list');
     this.electronService.ipcRenderer.on('epub-list', (event, epubs) => {
+      console.log(epubs);
       this.epubs = epubs;
       this.loading = false;
       this.changeDetector.detectChanges();
     });
+  }
+
+  searchTimeout;
+  filterEpubList() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.electronService.ipcRenderer.send('epub-list-filter', this.filters);
+    }, 300);
   }
 
   openEpub(epub) {
@@ -42,4 +52,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  removeEpub(id) {
+    this.loading = true;
+    this.electronService.ipcRenderer.send('epub-remove', id);
+    this.electronService.ipcRenderer.once('epub-remove', (event, status) => {
+      this.loading = false;
+      if(status == true) {
+        this.epubs.splice(this.epubs.findIndex(epub => epub.id == id), 1);
+      }
+      this.changeDetector.detectChanges();
+    });
+  }
 }
