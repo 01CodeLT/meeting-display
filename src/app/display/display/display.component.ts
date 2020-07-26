@@ -62,6 +62,7 @@ export class DisplayComponent implements OnInit {
                 .display {
                     color: ${options.fontColor};
                     font-size: ${options.fontSize}px;
+                    background-color: ${options.bgColor};
                     line-height: ${this.settings.lineHeight}px;
                 }
                 .display .text-clip { text-align: ${options.textAlign}; }
@@ -78,6 +79,7 @@ export class DisplayComponent implements OnInit {
 
                 //Assign settings
                 this.settings = Object.assign(this.settings, options);
+                this.changeDetector.detectChanges();
             }, 500);
         });
     }

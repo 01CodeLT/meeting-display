@@ -76,6 +76,17 @@
                                     <button (click)="slideshow.options.textAlign = 'center'; updateSlideOptions();" class="ui button"><i class="align center icon"></i></button>
                                     <button (click)="slideshow.options.textAlign = 'right'; updateSlideOptions();" class="ui button"><i class="align right icon"></i></button>
                                 </div>
+                                <div class="header">Background type</div>
+                                <select class="ui dropdown input" [(ngModel)]="slideshow.options.bgType" (change)="updateSlideOptions()">
+                                    <option ngValue="color">Color</option>
+                                    <option ngValue="pub">Publication cover</option>
+                                </select>
+                                <ng-container *ngIf="slideshow.options.bgType == 'color'">
+                                    <div class="header">Background color</div>
+                                    <div class="ui input">
+                                        <input type="color" [(ngModel)]="slideshow.options.bgColor" (input)="updateSlideOptions()">    
+                                    </div>
+                                </ng-container>
                                 <div class="header">Display on</div>
                                 <select class="ui dropdown input" [(ngModel)]="slideshow.options.display.selected" (change)="updateSlideOptions()">
                                     <option *ngFor="let option of slideshow.options.display.list" [ngValue]="option">PC Display: {{ option }}</option>

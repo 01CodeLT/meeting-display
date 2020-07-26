@@ -3,7 +3,7 @@ import * as path from 'path';
 import debug = require('electron-debug');
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron';
-import { toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
+import { displayWindow, toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
 import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, parseEpubPage, removeEpub } from './lib/EpubManager';
 
 //Setup nucleaus analytics - anonymous
@@ -54,6 +54,7 @@ function createWindow(): BrowserWindow {
   //Emitted when the window is closed.
   mainWindow.on('closed', () => {
     mainWindow = null; //Dereference the window object
+    displayWindow.close();
   });
 
   //Check for updates

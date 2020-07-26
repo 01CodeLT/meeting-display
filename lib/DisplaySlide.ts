@@ -3,16 +3,17 @@ import * as path from 'path';
 import NeDB = require('nedb');
 import { serve, mainWindow } from '../main';
 import { BrowserWindow, screen, app } from 'electron';
-import console = require('console');
 
 let epub;
 let slides = [];
-let displayWindow;
+export let displayWindow;
 let displayOptions = {
     fontSize: 40,
+    textAlign: 'center',
     fontColor: '#696969',
     fontLinkColor: '#7777',
-    textAlign: 'center',
+    bgType: 'color', //Can be 'color' or 'pub'
+    bgColor: '#fff',
     display: {
         selected: 1,
         list: []

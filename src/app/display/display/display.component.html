@@ -1,5 +1,9 @@
 <div class="display">
 
+    <div *ngIf="settings.bgType == 'pub'" class="pub-background">
+        <img [src]="('app://' + epub?.image) | sanitizer : 'url'">
+    </div>
+
     <div class="text-clip" [ngStyle]="{'max-height': (settings.textHeight + 'px')}">
         <div #textElement class="text" [ngStyle]="{'margin-top': (-settings.textY + 'px')}" [innerHTML]="slideshow.slides[slideshow.active]?.text"></div>
     </div>

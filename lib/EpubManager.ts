@@ -34,7 +34,7 @@ export function uploadEpub() {
                     //Extract zip folder
                     extract(`${storagePath}${filename}/epub.zip`, { dir: `${storagePath}${filename}` }).then(() => {
                         //Search for cover image
-                        glob(`${storagePath}${filename}/OEBPS/images/*_cvr.jpg`, {}, (err, images) => {
+                        glob(`{${storagePath}${filename}/OEBPS/images/*_cvr.jpg,${storagePath}${filename}/OEBPS/images/${filename}.jpg}`, {}, (err, images) => {
                             //Insert data
                             storage.insert({
                                 id: filename,
