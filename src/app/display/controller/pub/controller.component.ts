@@ -3,41 +3,25 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from 'ngx-electron';
-import { clearTimeout, setTimeout } from 'timers';
-
-export interface Epub {
-  id: string;
-  title: string;
-  image: string;
-  author: string;
-  structure?: Array<{
-    name: string;
-    path: string;
-    playOrder: string;
-  }>;
-  structure_filtered?: Array<{
-    name: string;
-    path: string;
-    playOrder: string;
-  }>;
-}
+import { SlidesService, Epub } from '../../../shared/services/slides.service';
 
 @Component({
-  selector: 'app-controller',
+  selector: 'app-pub-controller',
   templateUrl: './controller.component.html',
-  styleUrls: ['./controller.component.scss']
+  styleUrls: ['../controller.component.scss']
 })
-export class ControllerComponent implements OnInit {
+export class PubControllerComponent implements OnInit {
 
   epub: Epub;
   epubPage = { content: [] };
-  slideshow = { slides: [], active: 0, options: null };
+  slideshow = { slides: [], active: 0 };
 
   constructor(
     private dragulaService: DragulaService,
     private activatedRoute: ActivatedRoute,
     private electronService: ElectronService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    public slidesService: SlidesService
   ) { }
 
   ngOnInit() {
@@ -64,13 +48,6 @@ export class ControllerComponent implements OnInit {
         return target.id !== 'left';
       }
     });
-
-    //Get display options
-    this.electronService.ipcRenderer.send('slides-options');
-    this.electronService.ipcRenderer.on('slides-options', (event, options) => {
-      this.slideshow.options = options;
-      this.changeDetector.detectChanges();
-    });
   }
 
   searchTimeout;
@@ -93,20 +70,6 @@ export class ControllerComponent implements OnInit {
       this.changeDetector.detectChanges();
     });
   }
-
-  updateSlides() {
-    this.electronService.ipcRenderer.send('slides-update', {
-      id: this.epub.id,
-      title: this.epub.title,
-      image: this.epub.image,
-      author: this.epub.author
-    }, this.slideshow.slides);
-  }
-
-  updateTimeout;
-  updateSlideOptions() {
-    this.electronService.ipcRenderer.send('slides-options', this.slideshow.options);
-  }
   
   addAllSlides() {
     //Filter slides
@@ -119,20 +82,12 @@ export class ControllerComponent implements OnInit {
     
     //Add to final array
     this.slideshow.slides = this.slideshow.slides.concat(slides);
-    this.updateSlides();
+    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
   }
 
   removeSlide(index) {
     this.slideshow.slides.splice(index, 1);
-    this.updateSlides();
-  }
-
-  displaySlides() {
-    this.electronService.ipcRenderer.send('slides-display');
-  }
-
-  controlSlides(action, ...args) {
-    this.electronService.ipcRenderer.send('slides-control', action, ...args);
+    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
   }
 
   ngOnDestroy() {

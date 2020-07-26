@@ -11,7 +11,7 @@ let displayWindow;
 let displayOptions = {
     fontSize: 40,
     fontColor: '#696969',
-    fontLinkColor: '#7777',
+    fontLinkColor: '#4271BD',
     textAlign: 'center',
     display: {
         selected: 1,

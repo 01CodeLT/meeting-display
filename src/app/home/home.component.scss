@@ -8,7 +8,10 @@
     clear: both;
     min-height: 80vh;
     p {
+        overflow: hidden;
         color: #616161;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     .card {
         cursor: pointer;
@@ -16,12 +19,12 @@
     .trash {
         cursor: pointer;
         position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
+        top: .5rem;
+        right: .5rem;
         width: 1.8rem;
         line-height: 0;
-        border-radius: 50px;
         padding: 0.9rem 0px;
         background: #e0e1e2 none;
+        border-radius: 50px !important;
     }
 }

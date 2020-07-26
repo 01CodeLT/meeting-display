@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.electronService.ipcRenderer.send('epub-list');
     this.electronService.ipcRenderer.on('epub-list', (event, epubs) => {
-      console.log(epubs);
       this.epubs = epubs;
       this.loading = false;
       this.changeDetector.detectChanges();
@@ -40,7 +39,7 @@ export class HomeComponent implements OnInit {
 
   openEpub(epub) {
     this.zone.run(() => {
-      this.router.navigateByUrl(`/display/controller/${epub.id}`);
+      this.router.navigateByUrl(`/controller/${epub.type}/${epub.id}`);
     });
   }
 

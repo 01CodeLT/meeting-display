@@ -1,0 +1,62 @@
+<div class="container">
+
+    <a class="btn-back" routerLink="/">Back</a>
+
+    <h1>Display ePub</h1>
+    <div class="ui grid">
+        <div class="eight wide column bible-select">
+            <h3 class="ui top attached header">Book</h3>
+            <div class="ui attached segment books" tabindex="1" (keydown)="selectBook($event);">
+                <button class="ui button book" *ngFor="let book of epub?.structure; let i = index;" (click)="selectBook(i);" [ngClass]="{'active' : selection.bookIndex == i}">{{ book.name }}</button>
+            </div>
+            <h3 class="ui top attached header">Chapter</h3>
+            <div class="ui attached segment">
+                <div class="ui input">
+                    <input type="number" placeholder="1" tabindex="2">
+                </div>
+                <small class="message">Enter a single number - "22"</small>
+            </div>
+            <h3 class="ui top attached header">Verses</h3>
+            <div class="ui attached segment">
+                <div class="ui input">
+                    <input type="text" placeholder="22-40" tabindex="3">
+                </div>
+                <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
+            </div>
+            <button (click)="addScripture()" class="ui button add" title="Add scripture to final slideshow" tabindex="4">Add scripture</button>
+        </div>
+        <div class="eight wide column paragraphs">
+            <div class="ui top attached menu">
+                <div class="item">
+                    <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen">Toggle display</button>
+                </div>
+                <div class="right menu">
+                    <div class="item">
+                        <button class="ui button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide">
+                            <i class="icon angle left"></i>
+                        </button>
+                    </div>
+                    <div class="item">
+                        <button class="ui button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide">
+                            <i class="icon angle right"></i>
+                        </button>
+                    </div>
+                    <div class="item">
+                        <display-options></display-options>
+                    </div>
+                </div>
+            </div>
+            <div class="ui relaxed divided list">
+                <div *ngFor="let slide of slideshow.slides; let i = index;" class="item">
+                    <p class="mb-0" [innerHTML]="slide.text | sanitizer : 'html'"></p>
+                    <small class="float-right">{{ slide?.name }}</small>
+                    <div class="actions">
+                        <i class="close icon" (click)="removeSlide(i);" title="Remove slide"></i>
+                        <i class="external alternate icon" (click)="slidesService.controlSlides('switch-slide', i)" title="Switch display to this slide"></i>
+                    </div>
+                </div>
+                <p *ngIf="!slideshow.slides.length" class="info-tip">Drag content from the left to create a slideshow</p>
+            </div>
+        </div>
+    </div>
+</div>
