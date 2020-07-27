@@ -57,7 +57,7 @@
         transform: scale(1.1);
         background-size: cover;
         filter: blur(6px) brightness(50%);
-        background: #fff url('/assets/table-bg.jpg') center center fixed no-repeat;
+        background: #fff url('assets://table-bg.jpg') center center fixed no-repeat;
     }
 
     img {

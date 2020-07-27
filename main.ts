@@ -91,7 +91,15 @@ try {
   app.allowRendererProcessReuse = true;
 
   app.on('ready', () => {
-    //Register custom file protocol
+    //Register file protocol for assets folder
+    protocol.registerFileProtocol('assets', (request, callback) => {
+      const url = request.url.substr(9, request.url.length)
+      callback({ path: __dirname + '/dist/assets/' + url })
+    }, (error) => {
+      if (error) console.error('Failed to register protocol')
+    });
+
+    //Register file protocol for app data folder
     protocol.registerFileProtocol('app', (request, callback) => {
       const url = request.url.substr(6, request.url.length)
       callback({ path: app.getPath('userData') + '/storage/' + url })
