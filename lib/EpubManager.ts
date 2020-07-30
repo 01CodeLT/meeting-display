@@ -180,10 +180,7 @@ export function parseEpubPage(id, page) {
         content = content.concat(Object.values(scriptures));
 
         //Return data
-        mainWindow.webContents.send('epub-get-page', {
-            images: htmlDom.querySelectorAll('.img'),
-            content: content,
-        });
+        mainWindow.webContents.send('epub-get-page', { content: content });
     });
 }
 
@@ -194,6 +191,21 @@ export function getEpubPageRef(id, ref) {
         //Return error
         if (err) throw err;
 
-        console.log(html);
+        //Gather chapter path
+        let htmlDom = parse(html);
+        let chapters = htmlDom.querySelectorAll('.w_bibleChapter a');
+        let chapterNav = chapters.find((chapter) => {
+            return chapter.text == ref.chapter;
+        }).getAttribute('href');
+
+        //Return Verses
+        console.log(`${storagePath}${id}/OEBPS/${chapterNav}`);
+        fs.readFile(`${storagePath}${id}/OEBPS/${chapterNav}`, { encoding: 'utf8' }, (err, html) => {
+            let htmlDom = parse(html);
+            let verseHTML = Array.from(htmlDom.querySelectorAll('body p')).filter(el => el.classNames.includes('sb'));
+            let verseHTMLString = verseHTML.map(function (paragraph) { return paragraph.innerHTML; }).join(" ");
+            let verses = verseHTMLString.split(/<span id="chapter6_verse(?:[0-9]{1,3})"><\/span>/);
+            mainWindow.webContents.send('epub-get-ref', { content: verses[2] });
+        });
     });
 }

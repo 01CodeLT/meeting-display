@@ -12,14 +12,14 @@
             <h3 class="ui top attached header">Chapter</h3>
             <div class="ui attached segment">
                 <div class="ui input">
-                    <input type="number" placeholder="1" tabindex="2">
+                    <input type="number" [(ngModel)]="selection.chapter" placeholder="1" tabindex="2">
                 </div>
                 <small class="message">Enter a single number - "22"</small>
             </div>
             <h3 class="ui top attached header">Verses</h3>
             <div class="ui attached segment">
                 <div class="ui input">
-                    <input type="text" placeholder="22-40" tabindex="3">
+                    <input type="text" [(ngModel)]="selection.verses" placeholder="22-40" tabindex="3">
                 </div>
                 <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
             </div>

@@ -62,7 +62,7 @@ export class BibleControllerComponent implements OnInit {
   addScripture() {
     this.electronService.ipcRenderer.send('epub-get-ref', this.epub.id, this.selection);
     this.electronService.ipcRenderer.once('epub-get-ref', (event, refText) => {
-      
+      console.log(refText);
       this.changeDetector.detectChanges();
     });
   }
