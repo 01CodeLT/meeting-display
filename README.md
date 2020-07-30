@@ -1,10 +1,10 @@
 # JW Meeting display tool
 
-This is basic tool for displaying books & magazines in epub format from the jw website in congregation meetings. If you have any issues or feature requests please add them in the issues section.
+This is a useful tool for displaying books & magazines in epub format from the jw website in congregation meetings. You can import an epub file for the watchtower or books and display the individual paragraphs along with the cited scriptures from an article/page on a second screen.
+
+If you have any issues or feature requests for this application please add them in the issues section.
 
 <a href="https://github.com/01CodeLT/meeting-display/releases">Click here to download the latest release</a>
-
-*Please note: Upon downloading the application you may get a warning about the file being dangerous, please bypass this warning it's simply because it hasnt been code signed. As long as you download the application directly from github the application will be virus free, I hope to fix this soon...*
 
 ### Coming soon!
 
