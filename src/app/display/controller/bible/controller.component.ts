@@ -1,5 +1,5 @@
 import { ActivatedRoute, Params } from '@angular/router';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 
 import { ElectronService } from 'ngx-electron';
 import { SlidesService, Epub } from '../../../shared/services/slides.service';
@@ -12,8 +12,9 @@ import { SlidesService, Epub } from '../../../shared/services/slides.service';
 export class BibleControllerComponent implements OnInit {
 
   epub: Epub;
+  error = null;
   slideshow = { slides: [], active: 0 };
-  selection = { bookIndex: null, book: '', chapter: null, verses: '' };
+  selection = { bookIndex: null, bookPath: '', book: '', chapter: null, verses: '' };
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -34,36 +35,53 @@ export class BibleControllerComponent implements OnInit {
   }
 
   selectBook(event) {
-    if (event.keyCode) {
-      //Select via index
-      switch(event.keyCode) {
-        case 37: 
-          this.selection.bookIndex--;
-          break;
-        case 38:
-          this.selection.bookIndex -= 7;
-          break;
-        case 39: 
-          this.selection.bookIndex++;
-          break;
-        case 40:
-          this.selection.bookIndex += 7;
-          break;
+    if (!event.keyCode || [37,38,39,40].includes(event.keyCode)) {
+      if (event.keyCode) {
+        //Select via index
+        switch(event.keyCode) {
+          case 37: 
+            this.selection.bookIndex--;
+            break;
+          case 38:
+            this.selection.bookIndex -= 7;
+            break;
+          case 39: 
+            this.selection.bookIndex++;
+            break;
+          case 40:
+            this.selection.bookIndex += 7;
+            break;
+        }
+      } else {
+        //Move with arrows
+        this.selection.bookIndex = event;
       }
-    } else {
-      //Move with arrows
-      this.selection.bookIndex = event;
-    }
 
-    this.selection.book = this.epub.structure[this.selection.bookIndex].path;
-    this.changeDetector.detectChanges();
+      this.selection.bookPath = this.epub.structure[this.selection.bookIndex].path;
+      this.selection.book = this.epub.structure[this.selection.bookIndex].name;
+      this.changeDetector.detectChanges();
+    }
   }
 
   addScripture() {
-    this.electronService.ipcRenderer.send('epub-get-ref', this.epub.id, this.selection);
-    this.electronService.ipcRenderer.once('epub-get-ref', (event, refText) => {
-      console.log(refText);
+    this.electronService.ipcRenderer.send('bibleepub-get-ref', this.epub.id, this.selection);
+    this.electronService.ipcRenderer.once('bibleepub-get-ref', (event, content) => {
+      if(content.error) {
+        this.error = content.error;
+      } else {
+        this.error = null;
+        content.forEach((item) => {
+          this.slideshow.slides.push({ spans: 1, activeSpan: 0, text: item.text, name: (item.name || null) });
+        });
+        this.slidesService.updateSlides(this.epub, this.slideshow.slides);
+      }
       this.changeDetector.detectChanges();
     });
+  }
+
+  removeSlide(index) {
+    this.slideshow.slides.splice(index, 1);
+    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
+    this.changeDetector.detectChanges();
   }
 }

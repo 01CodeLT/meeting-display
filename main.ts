@@ -131,7 +131,7 @@ ipcMain.on('epub-remove', (event, id) => { removeEpub(id); });
 ipcMain.on('slides-display', (event) => { toggleDisplay(); });
 ipcMain.on('epub-list-filter', (event, filters) => { listEpubsFiltered(filters); });
 ipcMain.on('epub-get-page', (event, id, page) => { parseEpubPage(id, page); });
-ipcMain.on('epub-get-ref', (event, id, ref) => { getEpubPageRef(id, ref); });
+ipcMain.on('bibleepub-get-ref', (event, id, ref) => { getEpubPageRef(id, ref); });
 ipcMain.on('slides-options', (event, options = null) => { updateDisplayOptions(options); });
 ipcMain.on('slides-control', (event, action, ...args) => { controlDisplay(action, ...args); });
 ipcMain.on('slides-update', (event, selectedEpub = null, slideList = null) => { updateSlides(selectedEpub, slideList); });

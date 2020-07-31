@@ -1,13 +1,13 @@
 <div class="container">
 
-    <a class="btn-back" routerLink="/">Back</a>
+    <a class="btn-back" routerLink="/" tabindex="-1">Back</a>
 
     <h1>Display ePub</h1>
     <div class="ui grid">
         <div class="eight wide column bible-select">
             <h3 class="ui top attached header">Book</h3>
-            <div class="ui attached segment books" tabindex="1" (keydown)="selectBook($event);">
-                <button class="ui button book" *ngFor="let book of epub?.structure; let i = index;" (click)="selectBook(i);" [ngClass]="{'active' : selection.bookIndex == i}">{{ book.name }}</button>
+            <div class="ui attached segment books" (keydown)="selectBook($event);" tabindex="1">
+                <button class="ui button book" *ngFor="let book of epub?.structure; let i = index;" (click)="selectBook(i);" [ngClass]="{'active' : selection.bookIndex == i}" tabindex="-1">{{ book.name }}</button>
             </div>
             <h3 class="ui top attached header">Chapter</h3>
             <div class="ui attached segment">
@@ -24,20 +24,24 @@
                 <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
             </div>
             <button (click)="addScripture()" class="ui button add" title="Add scripture to final slideshow" tabindex="4">Add scripture</button>
+            <div *ngIf="error" class="ui negative message error">
+                <i (click)="error = null" class="close icon"></i>
+                <p>{{ error }}</p>
+            </div>
         </div>
         <div class="eight wide column paragraphs">
             <div class="ui top attached menu">
                 <div class="item">
-                    <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen">Toggle display</button>
+                    <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen" tabindex="-1">Toggle display</button>
                 </div>
                 <div class="right menu">
                     <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide">
+                        <button class="ui button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide" tabindex="-1">
                             <i class="icon angle left"></i>
                         </button>
                     </div>
                     <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide">
+                        <button class="ui button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide" tabindex="-1">
                             <i class="icon angle right"></i>
                         </button>
                     </div>

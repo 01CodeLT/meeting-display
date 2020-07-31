@@ -7,6 +7,7 @@ import extract = require('extract-zip');
 import { parse } from 'node-html-parser';
 import { parseEpub } from '@gxl/epub-parser';
 import { dialog, app } from 'electron';
+import console = require('console');
 
 const storage = new NeDB({ filename: app.getPath('userData') + '/storage/epubs', autoload: true });
 
@@ -187,25 +188,59 @@ export function parseEpubPage(id, page) {
 export function getEpubPageRef(id, ref) {
     console.log(ref);
     //Get text by reference (current use for bible only)
-    fs.readFile(`${storagePath}${id}/OEBPS/${ref.book}`, { encoding: 'utf8' }, (err, html) => {
+    fs.readFile(`${storagePath}${id}/OEBPS/${ref.bookPath}`, { encoding: 'utf8' }, (err, html) => {
         //Return error
         if (err) throw err;
 
         //Gather chapter path
         let htmlDom = parse(html);
         let chapters = htmlDom.querySelectorAll('.w_bibleChapter a');
-        let chapterNav = chapters.find((chapter) => {
-            return chapter.text == ref.chapter;
-        }).getAttribute('href');
 
-        //Return Verses
-        console.log(`${storagePath}${id}/OEBPS/${chapterNav}`);
-        fs.readFile(`${storagePath}${id}/OEBPS/${chapterNav}`, { encoding: 'utf8' }, (err, html) => {
-            let htmlDom = parse(html);
-            let verseHTML = Array.from(htmlDom.querySelectorAll('body p')).filter(el => el.classNames.includes('sb'));
-            let verseHTMLString = verseHTML.map(function (paragraph) { return paragraph.innerHTML; }).join(" ");
-            let verses = verseHTMLString.split(/<span id="chapter6_verse(?:[0-9]{1,3})"><\/span>/);
-            mainWindow.webContents.send('epub-get-ref', { content: verses[2] });
+        //Check if chapter is valid
+        if(ref.chapter > chapters.length - 1) {
+            mainWindow.webContents.send('bibleepub-get-ref', { error: 'The chapter number you have entered does not exist' });
+        }
+
+        //Check for one chapter books
+        if(chapters.length !== 0) {
+            //Get chapter path
+            let chapterNav = chapters.find((chapter) => {
+                return chapter.text == ref.chapter;
+            }).getAttribute('href');
+
+            //Get chapter verses html
+            html = fs.readFileSync(`${storagePath}${id}/OEBPS/${chapterNav}`, { encoding: 'utf8' });
+            htmlDom = parse(html);
+        }
+
+        //Get chapter verses
+        let verseHTML = Array.from(htmlDom.querySelectorAll('p')).filter(el => el.hasAttribute('data-pid'));
+        let verseHTMLString = verseHTML.map(function (paragraph) { return paragraph.innerHTML; }).join(" ");
+        let verses = verseHTMLString.split(/<span id="chapter(?:[0-9]{1,3})_verse(?:[0-9]{1,3})"><\/span>/);
+
+        //Return selected verses
+        let selectedVerses = [];
+        ref.verses = ref.verses.replace(/\s/g, '');
+        ref.verses.match(/([0-9]{0,3}-[0-9]{0,3})|([0-9]{0,3})/g).forEach(match => {
+            if (match !== "") { 
+                //Create string containing verses
+                let text = '';
+                if(match.includes('-')) {
+                    console.log('-')
+                    text = verses.slice(parseInt(match.split('-')[0]), parseInt(match.split('-')[1]) + 1).join(' ');
+                } else {
+                    text = verses[parseInt(match)];
+                }
+
+                //Check if selection is valid
+                if(!text) mainWindow.webContents.send('bibleepub-get-ref', { error: 'One or more of the entered verses does not exist'});
+
+                //Clean text before adding
+                text = text.replace(/<a href="([0-9]{0,15}).xhtml#footnotesource([0-9]{0,10})">[^] <span class="footnoteref">([A-z0-9.: ]{0,40}<\/span><\/a> )/g, '');
+                selectedVerses.push({ text: text, name: `${ref.book} ${ref.chapter}:${match}`});
+            }
         });
+        
+        mainWindow.webContents.send('bibleepub-get-ref', selectedVerses);
     });
 }
