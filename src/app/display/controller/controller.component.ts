@@ -7,6 +7,7 @@ import { clearTimeout, setTimeout } from 'timers';
 
 export interface Epub {
   id: string;
+  type: string;
   title: string;
   image: string;
   author: string;
@@ -97,6 +98,7 @@ export class ControllerComponent implements OnInit {
   updateSlides() {
     this.electronService.ipcRenderer.send('slides-update', {
       id: this.epub.id,
+      type: this.epub.type,
       title: this.epub.title,
       image: this.epub.image,
       author: this.epub.author

@@ -91,6 +91,7 @@ export function toggleDisplay() {
                     nodeIntegration: true,
                     allowRunningInsecureContent: (serve) ? true : false,
                 },
+                fullscreen: true,
                 title: 'Meeting display',
                 icon: __dirname + '/../icon.ico'
             });
@@ -98,7 +99,6 @@ export function toggleDisplay() {
             //Set as fullscreen
             displayWindow.maximize();
             displayWindow.removeMenu();
-            displayWindow.setFullScreen(true);
 
             //Electron config
             if (serve) {

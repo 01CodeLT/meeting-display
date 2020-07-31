@@ -8,7 +8,7 @@ import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, parseEpubPage, remov
 
 //Setup nucleaus analytics - anonymous
 const Nucleus = require('nucleus-nodejs');
-Nucleus.init('5f13691da5d05e6842655618');
+Nucleus.init('5f13691da5d05e6842655618', { autoUserId: true });
 
 export var mainWindow: BrowserWindow = null;
 export const storagePath = app.getPath('userData') + '/storage/';
