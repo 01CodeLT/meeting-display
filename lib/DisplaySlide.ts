@@ -11,7 +11,7 @@ let displayOptions = {
     fontSize: 40,
     textAlign: 'center',
     fontColor: '#696969',
-    fontLinkColor: '#7777',
+    fontLinkColor: '#4271BD',
     bgType: 'color', //Can be 'color' or 'pub'
     bgColor: '#fff',
     display: {

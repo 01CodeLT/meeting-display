@@ -14,7 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { DragulaModule } from 'ng2-dragula';
 import { NgxElectronModule } from 'ngx-electron';
 import { DisplayComponent } from './display/display/display.component';
-import { ControllerComponent } from './display/controller/controller.component';
+import { PubControllerComponent } from './display/controller/pub/controller.component';
+import { BibleControllerComponent } from './display/controller/bible/controller.component';
 
 const routes: Routes = [
   {
@@ -26,8 +27,12 @@ const routes: Routes = [
     component: DisplayComponent
   },
   {
-    path: 'display/controller/:id',
-    component: ControllerComponent
+    path: 'controller/pub/:id',
+    component: PubControllerComponent
+  },
+  {
+    path: 'controller/bible/:id',
+    component: BibleControllerComponent
   }
 ];
 
@@ -36,7 +41,8 @@ const routes: Routes = [
     AppComponent, 
     HomeComponent, 
     DisplayComponent, 
-    ControllerComponent
+    PubControllerComponent,
+    BibleControllerComponent
   ],
   imports: [
     BrowserModule,

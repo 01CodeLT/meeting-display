@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject } from '@angular/core';
 
 import { ElectronService } from 'ngx-electron';
-import { Epub } from '../controller/controller.component';
+import { Epub } from '../../shared/services/slides.service';
 
 @Component({
     selector: 'app-display',

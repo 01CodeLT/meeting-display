@@ -9,15 +9,15 @@
 
   <div class="ui grid books">
     <div *ngFor="let epub of epubs" class="three wide column">
-      <div class="ui card" (click)="openEpub(epub)">
-        <div class="image">
+      <div class="ui card">
+        <div class="image" (click)="openEpub(epub)">
           <img [src]="('app://' + epub.image) | sanitizer : 'url'">
         </div>
         <div class="content">
           <p>{{ epub.title }}</p>
         </div>
+        <i (click)="removeEpub(epub.id)" class="trash icon red"></i>
       </div>
-      <i (click)="removeEpub(epub.id)" class="trash icon red"></i>
     </div>
     <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication and click import epub.</p>
   </div>

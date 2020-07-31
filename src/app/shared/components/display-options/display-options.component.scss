@@ -1,0 +1,19 @@
+.menu .message.error {
+    font-size: 80%;
+    max-width: 100%;
+    color: #912d2b;
+    margin-top: -1.2rem;
+    padding-bottom: 0rem;
+    white-space: break-spaces;
+}
+.dropdown.button {
+    margin: -.5em 0;
+    padding-top: .78571429em;
+    padding-bottom: .78571429em;
+}
+::ng-deep .dropdown ::ng-deep .buttons {
+    width: auto;
+    display: flex;
+    min-width: 10rem;
+    margin: 1.14285714rem .78571429rem;
+}

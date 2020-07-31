@@ -47,6 +47,7 @@ electron-builder.yml
 /e2e/*.map
 
 # System Files
+/config
 .DS_Store
 Thumbs.db
 config

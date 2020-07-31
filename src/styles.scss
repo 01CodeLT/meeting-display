@@ -26,6 +26,17 @@ h1 {
 .dropdown.active .menu {
     display: block;
 }
+.message.error {
+    display: block;
+    float: right;
+    width: fit-content;
+    clear: both;
+    padding: 0.9rem 1rem;
+}
+.message.error p {
+    margin-top: 0px;
+    padding-right: 15px;
+}
 .container {
     padding: 30px 30px 0px 30px;
 }
@@ -39,16 +50,6 @@ h1 {
     width: 100%;
     text-align: center;
 }
-
-/* Dragula css */
-// .gu-mirror {
-//   position: fixed !important;
-//   margin: 0 !important;
-//   z-index: 9999 !important;
-//   opacity: 0.8;
-//   //-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-//   filter: alpha(opacity=80);
-// }
 .gu-hide {
   display: none !important;
 }
