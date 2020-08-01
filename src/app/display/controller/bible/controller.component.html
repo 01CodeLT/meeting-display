@@ -23,7 +23,7 @@
                 </div>
                 <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
             </div>
-            <button (click)="addScripture()" class="ui button add" title="Add scripture to final slideshow" tabindex="4">Add scripture</button>
+            <button (click)="addScripture()" class="ui button add" title="Add scripture to final slideshow" tabindex="4">Add scripture(s)</button>
             <div *ngIf="error" class="ui negative message error">
                 <i (click)="error = null" class="close icon"></i>
                 <p>{{ error }}</p>
@@ -59,7 +59,7 @@
                         <i class="external alternate icon" (click)="slidesService.controlSlides('switch-slide', i)" title="Switch display to this slide"></i>
                     </div>
                 </div>
-                <p *ngIf="!slideshow.slides.length" class="info-tip">Drag content from the left to create a slideshow</p>
+                <p *ngIf="!slideshow.slides.length" class="info-tip">Add scriptures on the left to create a slideshow</p>
             </div>
         </div>
     </div>

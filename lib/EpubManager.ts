@@ -17,36 +17,6 @@ export function uploadEpub() {
         properties: ['openFile'], 
         filters: [{ name: 'ePub files', extensions: ['epub'] }],
     }).then((result) => {
-<<<<<<< HEAD
-        if(result.canceled == false) {
-            //Activate loading state
-            mainWindow.webContents.send('epub-upload');
-
-            //Import epub
-            parseEpub(result.filePaths[0], {
-                type: 'path',
-            }).then((ePub) => {
-                //Copy file as zip
-                let filename = path.basename(result.filePaths[0]).replace('.epub', '');
-                fs.mkdirSync(`${storagePath}${filename}`, { recursive: true });
-                fs.writeFile(`${storagePath}${filename}/epub.zip`, fs.readFileSync(result.filePaths[0]), (err) => {
-                    //Return error
-                    if (err) throw err;
-                    
-                    //Extract zip folder
-                    extract(`${storagePath}${filename}/epub.zip`, { dir: `${storagePath}${filename}` }).then(() => {
-                        //Search for cover image
-                        glob(`{${storagePath}${filename}/OEBPS/images/*_cvr.jpg,${storagePath}${filename}/OEBPS/images/${filename}.jpg}`, {}, (err, images) => {
-                            //Insert data
-                            storage.insert({
-                                id: filename,
-                                type: 'pub',
-                                title: ePub.info.title,
-                                author: ePub.info.publisher,
-                                structure: JSON.stringify(ePub.structure),
-                                image: `${filename}/OEBPS/images/${path.basename(images[0])}`,
-                            });
-=======
         try {
             if(result.canceled == false) {
                 //Activate loading state
@@ -65,6 +35,9 @@ export function uploadEpub() {
                         
                         //Extract zip folder
                         extract(`${storagePath}${filename}/epub.zip`, { dir: `${storagePath}${filename}` }).then(() => {
+                            //Remove original zip
+                            fs.unlinkSync(`${storagePath}${filename}/epub.zip`);
+
                             //Search for cover image
                             glob(`{${storagePath}${filename}/OEBPS/images/*_cvr.jpg,${storagePath}${filename}/OEBPS/images/${filename}.jpg}`, {}, (err, images) => {
                                 //Get publication type
@@ -106,7 +79,6 @@ export function uploadEpub() {
                                                     path: book.getAttribute('href'),
                                                 });
                                             });
->>>>>>> bible_epubs
 
                                             return JSON.stringify(books);
                                         })(),
@@ -157,7 +129,6 @@ export function listEpubs() {
 export function listEpubsFiltered(filters) {
     // Find all documents in the collection
     storage.find({ title: { $regex: new RegExp(filters.title.toLowerCase(), 'i') } }, (err, docs) => {
-        console.log(docs);
         mainWindow.webContents.send('epub-list', docs || []);
     });
 }
@@ -166,7 +137,6 @@ export function getEpub(id) {
     // Find document by id
     storage.find({ id: id }, (err, docs) => {
         docs[0].structure = JSON.parse(docs[0].structure);
-        console.log(docs);
         mainWindow.webContents.send('epub-get', docs[0]);
     });
 }
@@ -228,7 +198,7 @@ export function getEpubPageRef(id, ref) {
         let chapters = htmlDom.querySelectorAll('.w_bibleChapter a');
 
         //Check if chapter is valid
-        if(ref.chapter > chapters.length - 1) {
+        if(ref.chapter > (chapters.length == 0 ? 1 : chapters.length - 1)) {
             mainWindow.webContents.send('bibleepub-get-ref', { error: 'The chapter number you have entered does not exist' });
         }
 
@@ -267,7 +237,7 @@ export function getEpubPageRef(id, ref) {
                 if(!text) mainWindow.webContents.send('bibleepub-get-ref', { error: 'One or more of the entered verses does not exist'});
 
                 //Clean text before adding
-                text = text.replace(/<a href="([0-9]{0,15}).xhtml#footnotesource([0-9]{0,10})">[^] <span class="footnoteref">([A-z0-9.: ]{0,40}<\/span><\/a> )/g, '');
+                text = text.replace(/<a href="([0-9]{0,15}).xhtml#footnotesource([0-9]{0,10})">[^] <span class="footnoteref">([A-z0-9.: ]{0,40}<\/span><\/a> )|<a epub:type="noteref" ((target="_blank" )?)href="#footnote([0-9]{1,3})">[*]<\/a>/g, '');
                 selectedVerses.push({ text: text, name: `${ref.book} ${ref.chapter}:${match}`});
             }
         });

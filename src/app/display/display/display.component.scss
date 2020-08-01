@@ -27,6 +27,7 @@
         }
     }
 }
+
 .publication {
     text-align: center;
     position: fixed;
@@ -43,12 +44,19 @@
     }
 }
 
+/* Note filter doesn't work unless added individually */
+$pub-filter: blur(6px) brightness(40%);
+
 /* Background styles */
 .pub-background {
     overflow: hidden;
     position: absolute;
     height: calc(100% + 2px);
     width: calc(100% + 2px);
+
+    img {
+        width: 100%;
+    }
 
     &:before {
         content: "";
@@ -57,7 +65,7 @@
         display: block;
         transform: scale(1.1);
         background-size: cover;
-        filter: blur(6px) brightness(40%);
+        filter: $pub-filter;
         background-image: url(assets://table-bg.jpg);
         background-position: bottom right;
     }
@@ -68,36 +76,50 @@
         width: 38%;
         position: fixed;
         transform-style: preserve-3d;
-        filter: blur(6px) brightness(40%);
         transform: rotateX(36deg) rotateZ(-27deg);
+
+        img {
+            filter: $pub-filter;
+        }
 
         &:before {
             content: "";
-            width: calc(100% - 0.8rem);
+            width: 1.5rem;
             display: block;
+            filter: $pub-filter;
             position: absolute;
-            background-color: #353535;
-            transform: rotateY(100deg) translateX(0);
+            height: calc(100% - 1.8rem);
+            background-color: #525252;
+            transform: rotateY(90deg);
             transform-origin: 0px 0;
         }
 
         &:after {
             content: "";
-            width: calc(100% - 0rem);
-            height: 1rem;
-            display: block;
+            height: 1.5rem;
+            display: block; 
+            filter: $pub-filter;
             position: absolute;
+            width: calc(100% - 0.4rem);
             background-color: #fff;
-            transform: rotateX(-100deg) translateY(2rem) translateX(-0.5rem);
+            transform: rotateX(90deg) translateX(-0.5rem);
             transform-origin: 0px 0;
         }
     }
+}
+.pub-background ~ .publication img {
+    display: none;
+}
+.pub-background ~ .publication h5 {
+    max-width: 400px !important;
+}
 
-    .book.bible {
-        top: 4% !important;
+/* Change view for bible */
+.pub-background.bible {
+    &:before {    
+        background-image: url(assets://bible-bg.jpg);
     }
-
-    img {
-        width: 100%;
+    .book {
+        display: none;
     }
 }

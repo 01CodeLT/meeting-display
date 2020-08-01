@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject } f
 
 import { ElectronService } from 'ngx-electron';
 import { Epub } from '../../shared/services/slides.service';
+import * as console from 'console';
 
 @Component({
     selector: 'app-display',
@@ -32,6 +33,7 @@ export class DisplayComponent implements OnInit {
             //Set epub, slides
             this.epub = epub;
             this.slideshow.slides = slides;
+            this.slideshow.active = (this.slideshow.active > (slides.length - 1)) ? 0 : this.slideshow.active;
             this.changeDetector.detectChanges();
 
             //Recalculate text height

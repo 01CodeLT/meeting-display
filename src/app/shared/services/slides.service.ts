@@ -26,6 +26,7 @@ export class SlidesService {
     public updateSlides(epub, slides) {
         this.electronService.ipcRenderer.send('slides-update', {
             id: epub.id,
+            type: epub.type,
             title: epub.title,
             image: epub.image,
             author: epub.author

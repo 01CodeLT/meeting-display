@@ -1,7 +1,7 @@
 <div class="display">
 
-    <div *ngIf="settings.bgType == 'pub'" class="pub-background">
-        <div class="book {{ epub?.type }}">
+    <div *ngIf="settings.bgType == 'pub'" class="pub-background {{ epub?.type }}">
+        <div class="book">
             <img [src]="('app://' + epub?.image) | sanitizer : 'url'">    
         </div>
     </div>

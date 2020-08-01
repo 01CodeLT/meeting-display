@@ -5,7 +5,7 @@
         <div class="ui input" title="Changing font size during slide display restarts the slideshow from the beginning!">
             <input type="number" [(ngModel)]="options.fontSize" (keyup)="updateOptions()" (change)="updateOptions()">
         </div>
-        <p class="message error">Changing font size during slide display restarts the slideshow from the beginning!</p>
+        <p class="message negative">Changing font size during slide display restarts the slideshow from the beginning!</p>
         <div class="header">Font color</div>
         <div class="ui input">
             <input type="color" [(ngModel)]="options.fontColor" (input)="updateOptions()">
@@ -19,6 +19,17 @@
             <button (click)="options.textAlign = 'left'; updateOptions();" class="ui button"><i class="align left icon"></i></button>
             <button (click)="options.textAlign = 'center'; updateOptions();" class="ui button"><i class="align center icon"></i></button>
             <button (click)="options.textAlign = 'right'; updateOptions();" class="ui button"><i class="align right icon"></i></button>
+        </div>
+        <div class="header">Background type</div>
+        <div class="ui input">
+            <select class="ui dropdown input" [(ngModel)]="options.bgType" (change)="updateOptions()">
+                <option ngValue="pub">Publication cover</option>
+                <option ngValue="color">Plain color</option>
+            </select>
+        </div>
+        <div class="header">Background color</div>
+        <div class="ui input">
+            <input type="color" [(ngModel)]="options.bgColor" (input)="updateOptions()">
         </div>
         <div class="header">Display on</div>
         <select class="ui dropdown input" [(ngModel)]="options.display.selected" (change)="updateOptions()">
