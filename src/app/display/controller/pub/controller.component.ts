@@ -87,6 +87,10 @@ export class PubControllerComponent implements OnInit {
     this.slidesService.updateSlides(this.epub, this.slideshow.slides);
   }
 
+  updateSlides() {
+    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
+  }
+
   removeSlide(index) {
     this.slideshow.slides.splice(index, 1);
     this.slidesService.updateSlides(this.epub, this.slideshow.slides);

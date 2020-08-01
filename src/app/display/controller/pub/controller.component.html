@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ui relaxed divided list" dragula="DRAGULA_FACTS" [(dragulaModel)]="slideshow.slides" (dragulaModelChange)="slidesService.updateSlides()" id="right">
+            <div class="ui relaxed divided list" dragula="DRAGULA_FACTS" [(dragulaModel)]="slideshow.slides" (dragulaModelChange)="updateSlides()" id="right">
                 <div *ngFor="let slide of slideshow.slides; let i = index;" class="item">
                     <p class="mb-0" [innerHTML]="slide.text | sanitizer : 'html'"></p>
                     <small class="float-right">{{ slide?.name }}</small>
