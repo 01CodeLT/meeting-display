@@ -4,7 +4,11 @@ This is a useful tool for displaying scriptures, books & magazines in congregati
 
 If you have any issues or feature requests for this application please add them in the issues section.
 
-<a href="https://github.com/01CodeLT/meeting-display/releases">Click here to download the latest release</a>
+<a href="https://github.com/01CodeLT/meeting-display/releases/download/v2.0.0/Meeting-Display-Setup-2.0.0.exe" download>Click here to download the latest release</a>
+
+_**Please note:** Some users may experience an issue when downloading the application. Windows does not automatically trust apps which have a small number of downloads, to bypass this issue follow the steps below..._
+
+![trust-meeting-display-app](https://user-images.githubusercontent.com/11212855/90187791-4c2a9e00-ddb2-11ea-81c7-c90650280afb.gif)
 
 ### Features
 
