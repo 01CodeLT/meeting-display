@@ -3,6 +3,7 @@ import { ElectronService } from 'ngx-electron';
 
 export interface Epub {
     id: string;
+    type: string;
     title: string;
     image: string;
     author: string;

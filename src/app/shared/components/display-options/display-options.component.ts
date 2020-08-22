@@ -13,6 +13,8 @@ export class DisplayOptionsComponent implements OnInit {
     fontColor: '#696969',
     fontLinkColor: '#4271BD',
     textAlign: 'center',
+    bgType: 'color', //Can be 'color' or 'pub'
+    bgColor: '#fff',
     display: {
       selected: 1,
       list: []

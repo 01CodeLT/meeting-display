@@ -46,6 +46,8 @@ export function updateDisplayOptions(updatedOptions) {
         });
     } else {
         //Move display to selected
+        console.log(updatedOptions);
+        console.log(displayOptions);
         if(updatedOptions.display.selected !== displayOptions.display.selected) {
             //Close window
             if(displayWindow) {

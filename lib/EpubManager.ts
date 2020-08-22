@@ -1,13 +1,9 @@
 import fs = require('fs');
-import path = require('path');
 import NeDB = require('nedb');
-import glob = require('glob');
+import cp = require('child_process');
 import { mainWindow, storagePath } from '../main';
-import extract = require('extract-zip');
 import { parse } from 'node-html-parser';
-import { parseEpub } from '@gxl/epub-parser';
 import { dialog, app } from 'electron';
-import console = require('console');
 
 const storage = new NeDB({ filename: app.getPath('userData') + '/storage/epubs', autoload: true });
 
@@ -22,76 +18,28 @@ export function uploadEpub() {
                 //Activate loading state
                 mainWindow.webContents.send('epub-upload');
 
-                //Import epub
-                parseEpub(result.filePaths[0], {
-                    type: 'path',
-                }).then((ePub) => {
-                    //Copy file as zip
-                    let filename = path.basename(result.filePaths[0]).replace('.epub', '');
-                    fs.mkdirSync(`${storagePath}${filename}`, { recursive: true });
-                    fs.writeFile(`${storagePath}${filename}/epub.zip`, fs.readFileSync(result.filePaths[0]), (err) => {
-                        //Return error
-                        if (err) throw err;
-                        
-                        //Extract zip folder
-                        extract(`${storagePath}${filename}/epub.zip`, { dir: `${storagePath}${filename}` }).then(() => {
-                            //Remove original zip
-                            fs.unlinkSync(`${storagePath}${filename}/epub.zip`);
-
-                            //Search for cover image
-                            glob(`{${storagePath}${filename}/OEBPS/images/*_cvr.jpg,${storagePath}${filename}/OEBPS/images/${filename}.jpg}`, {}, (err, images) => {
-                                //Get publication type
-                                let type = (/nwt(.*)/g.test(filename)) ? 'bible' : 'pub'
-                                
-                                //Check if pub
-                                if(type == 'pub') {
-                                    //Insert pub
-                                    storage.insert({
-                                        id: filename,
-                                        type: type,
-                                        title: ePub.info.title,
-                                        author: ePub.info.publisher,
-                                        structure: JSON.stringify(ePub.structure),
-                                        image: `${filename}/OEBPS/images/${path.basename(images[0])}`,
-                                    });
-                                } else {
-                                    //Insert bible
-                                    storage.insert({
-                                        id: filename,
-                                        type: type,
-                                        title: ePub.info.title,
-                                        author: ePub.info.publisher,
-                                        structure: (() => {
-                                            //Read bible book nav file instead
-                                            let html = fs.readFileSync(`${storagePath}${filename}/OEBPS/biblebooknav.xhtml`, { encoding: 'utf8' });
-                                            
-                                            //Return error
-                                            if (err) throw err;
-
-                                            //Parse dom
-                                            let htmlDom = parse(html);
-
-                                            //Gather scripture footnotes
-                                            let books = [];
-                                            htmlDom.querySelectorAll('.w_bibleBook a').forEach((book) => {
-                                                books.push({ 
-                                                    name: book.innerHTML,
-                                                    path: book.getAttribute('href'),
-                                                });
-                                            });
-
-                                            return JSON.stringify(books);
-                                        })(),
-                                        image: `${filename}/OEBPS/images/${path.basename(images[0])}`,
-                                    });
-                                }
-
-                                //Send data to ui
-                                listEpubs();
-                            });
+                //Setup import process in background
+                var importProc = cp.fork('./lib/workers/ImportEpub');
+                importProc.on('message', ({ status, data = null }) => {
+                    //Show error or insert into db
+                    if(status == false) {
+                        dialog.showMessageBox(mainWindow, {
+                            message: 'An error occured whilst importing this publication...'
                         });
-                    });
+                    } else {
+                        storage.insert(data);
+                    }
+
+                    //Reload epubs and kill process
+                    listEpubs();
+                    importProc.kill('SIGKILL');
                 });
+
+                //Run import process
+                importProc.send({
+                    storagePath: storagePath, 
+                    filePath: result.filePaths[0]
+                }); 
             }
         } catch(e) {
             console.log(e);
@@ -187,7 +135,6 @@ export function parseEpubPage(id, page) {
 }
 
 export function getEpubPageRef(id, ref) {
-    console.log(ref);
     //Get text by reference (current use for bible only)
     fs.readFile(`${storagePath}${id}/OEBPS/${ref.bookPath}`, { encoding: 'utf8' }, (err, html) => {
         //Return error
@@ -227,7 +174,6 @@ export function getEpubPageRef(id, ref) {
                 //Create string containing verses
                 let text = '';
                 if(match.includes('-')) {
-                    console.log('-')
                     text = verses.slice(parseInt(match.split('-')[0]), parseInt(match.split('-')[1]) + 1).join(' ');
                 } else {
                     text = verses[parseInt(match)];

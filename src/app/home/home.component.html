@@ -19,10 +19,10 @@
         <i (click)="removeEpub(epub.id)" class="trash icon red"></i>
       </div>
     </div>
-    <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication and click import epub.</p>
+    <p *ngIf="!epubs.length" class="info-tip">No uploaded epubs. Download a publication from jw.org and click import epub.</p>
   </div>
 </div>
 
 <sui-dimmer class="page" [isDimmed]="loading">
-  <div class="ui text loader">One moment please...</div>
+  <div class="ui text loader">One moment please - this can take a while...</div>
 </sui-dimmer>

@@ -28,6 +28,7 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       allowRunningInsecureContent: (serve) ? true : false,
     },
     title: 'Meeting display',
