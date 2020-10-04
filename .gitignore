@@ -52,4 +52,4 @@ electron-builder.yml
 Thumbs.db
 config
 
-assets/ng-semantic
+docs/*

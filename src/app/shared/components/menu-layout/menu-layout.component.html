@@ -1,4 +1,4 @@
-<div class="ui menu">
+<div class="ui header menu">
     <div class="item">
         <img src="/assets/icons/favicon.png">
     </div>
@@ -11,7 +11,7 @@
     <a (click)="openSettings()" class="item">
         Settings
     </a>
-    <a class="item">
+    <a (click)="openHelp()" class="item">
         Help
     </a>
     <div class="right menu">
@@ -88,5 +88,22 @@
             </div>
         </div>
         <button style="margin-bottom: 1.5rem" class="ui primary button float-right" (click)="modal.approve('approved')">Done</button>
+    </div>
+</ng-template>
+<ng-template let-context let-modal="modal" #helpModal>
+    <div class="header">Help guide</div>
+    <div class="content help">
+        <div class="ui grid">
+            <div class="four wide column">
+                <div class="ui vertical fluid tabular menu">
+                    <a *ngFor="let content of helpContents.list; let i = index;" (click)="selectHelpGuide(i)" [ngClass]="{ 'active': i == helpContents.active }" class="item">
+                        {{ content.title }}
+                    </a>
+                </div>
+            </div>
+            <div class="twelve wide stretched column">
+                <div class="ui segment content" [innerHTML]="helpContents.activeHtml | sanitizer : 'html'"></div>
+            </div>
+        </div>
     </div>
 </ng-template>

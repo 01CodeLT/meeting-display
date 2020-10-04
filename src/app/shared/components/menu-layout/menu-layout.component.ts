@@ -1,4 +1,5 @@
 import { Component, OnInit, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { FuiModalService, TemplateModalConfig, ModalTemplate } from 'ngx-fomantic-ui';
@@ -13,6 +14,7 @@ import { ElectronService } from 'ngx-electron';
 export class MenuLayoutComponent implements OnInit {
 
   window = { maximizable: false };
+  helpContents = { list: [], active: 0, activeHtml: '' };
   settings = {
     fontSize: 40,
     fontColor: '#696969',
@@ -26,11 +28,13 @@ export class MenuLayoutComponent implements OnInit {
     }
   };
   
-  @ViewChild('settingsModal', { static: false }) settingsModal: ModalTemplate<any, string, string>
+  @ViewChild('settingsModal', { static: false }) settingsModal: ModalTemplate<any, string, string>;
+  @ViewChild('helpModal', { static: false }) helpModal: ModalTemplate<any, string, string>
 
   constructor(
     private zone: NgZone,
     private router: Router,
+    private http: HttpClient,
     public slidesService: SlidesService,
     public modalService: FuiModalService,
     private electronService: ElectronService,
@@ -57,6 +61,32 @@ export class MenuLayoutComponent implements OnInit {
   openSettings() {
     const config = new TemplateModalConfig<any, string, string>(this.settingsModal);
     this.modalService.open(config);
+  }
+
+  openHelp() {
+    //Load help docs
+    if (this.helpContents.list.length == 0) {
+      this.http.get('http://01coding.co.uk/meeting-display/docs/contents.json').subscribe((helpContents: any) => {
+        this.helpContents.list = helpContents;
+        this.selectHelpGuide(0);
+      });
+    }
+    
+    //Open modal
+    const config = new TemplateModalConfig<any, string, string>(this.helpModal);
+    config.size = 'large';
+    this.modalService.open(config);
+  }
+
+  selectHelpGuide(index) {
+    if(this.helpContents.list[index].link.includes('.html')) {
+      this.helpContents.active = index;
+      this.http.get('http://01coding.co.uk/meeting-display/docs/' + this.helpContents.list[index].link, { responseType: "text" }).subscribe((html: any) => {
+        this.helpContents.activeHtml = html;
+      });
+    } else {
+      this.electronService.shell.openExternal(this.helpContents.list[index].link);
+    }
   }
 
   updateOptions() {

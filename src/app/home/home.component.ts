@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
     this.electronService.ipcRenderer.once('epub-upload', (event) => {
       this.loading = true;
       this.changeDetector.detectChanges();
-    });
+    }); 
   }
 
   removeEpub(id) {
