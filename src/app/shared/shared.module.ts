@@ -6,13 +6,13 @@ import { SanitizerPipe } from './pipes/santizer.pipe';
 
 //NG Semantic ui
 import { SlidesService } from './services/slides.service';
-import { SuiDropdownModule, SuiSelectModule, SuiDimmerModule } from 'ng2-semantic-ui';
-import { DisplayOptionsComponent } from './components/display-options/display-options.component';
+import { FuiDropdownModule, FuiSelectModule, FuiDimmerModule, FuiModalModule } from 'ngx-fomantic-ui';
+import { DisplayControllerComponent } from './components/display-controller/display-controller.component';
 
 @NgModule({
   declarations: [
     SanitizerPipe,
-    DisplayOptionsComponent
+    DisplayControllerComponent
   ],
   providers: [
     SlidesService
@@ -22,19 +22,21 @@ import { DisplayOptionsComponent } from './components/display-options/display-op
     FormsModule,
     NgxElectronModule,
 
-    SuiDropdownModule,
-    SuiSelectModule,
-    SuiDimmerModule
+    FuiDropdownModule,
+    FuiSelectModule,
+    FuiDimmerModule,
+    FuiModalModule
   ],
   exports: [
     FormsModule,
     SanitizerPipe,
     NgxElectronModule,
-    DisplayOptionsComponent,
+    DisplayControllerComponent,
 
-    SuiDropdownModule,
-    SuiSelectModule,
-    SuiDimmerModule
+    FuiDropdownModule,
+    FuiSelectModule,
+    FuiDimmerModule,
+    FuiModalModule
   ]
 })
 export class SharedModule {}

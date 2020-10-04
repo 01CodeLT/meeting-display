@@ -1,7 +1,8 @@
 import { ActivatedRoute, Params } from '@angular/router';
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { ElectronService } from 'ngx-electron';
+import { ControllerComponent } from '../controller.component';
 import { SlidesService, Epub } from '../../../shared/services/slides.service';
 
 @Component({
@@ -9,22 +10,21 @@ import { SlidesService, Epub } from '../../../shared/services/slides.service';
   templateUrl: './controller.component.html',
   styleUrls: ['../controller.component.scss']
 })
-export class BibleControllerComponent implements OnInit {
+export class BibleControllerComponent extends ControllerComponent implements OnInit {
 
-  epub: Epub;
   error = null;
-  slideshow = { slides: [], active: 0 };
   selection = { bookIndex: null, bookPath: '', book: '', chapter: null, verses: '' };
 
   constructor(
+    public slidesService: SlidesService,
+    public electronService: ElectronService,
+    public changeDetector: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
-    private electronService: ElectronService,
-    private changeDetector: ChangeDetectorRef,
-    public slidesService: SlidesService
-  ) { }
+  ) { super(slidesService, electronService, changeDetector) }
 
   ngOnInit() {
     //Get epub content
+    super.ngOnInit();
     this.activatedRoute.params.subscribe((params: Params) => {
       this.electronService.ipcRenderer.send('epub-get', params['id']);
       this.electronService.ipcRenderer.once('epub-get', (event, epub) => {
@@ -77,11 +77,5 @@ export class BibleControllerComponent implements OnInit {
       }
       this.changeDetector.detectChanges();
     });
-  }
-
-  removeSlide(index) {
-    this.slideshow.slides.splice(index, 1);
-    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
-    this.changeDetector.detectChanges();
   }
 }

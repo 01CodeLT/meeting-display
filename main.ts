@@ -2,11 +2,15 @@ import * as url from 'url';
 import * as path from 'path';
 import debug = require('electron-debug');
 import { autoUpdater } from 'electron-updater';
-import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, screen, protocol, ipcMain, dialog, remote } from 'electron';
+
+import { showToolbar, hideToolbar, toolbarWindow } from './lib/ControlToolbar';
 import { displayWindow, toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
 import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, getEpubPageRef, parseEpubPage, removeEpub } from './lib/EpubManager';
 
-//Setup nucleaus analytics - anonymous
+debug();
+
+//Setup nucleus analytics - anonymous
 const Nucleus = require('nucleus-nodejs');
 Nucleus.init('5f13691da5d05e6842655618', { autoUserId: true });
 
@@ -23,6 +27,7 @@ function createWindow(): BrowserWindow {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
+    frame: false,
     width: size.width,
     height: size.height,
     webPreferences: {
@@ -56,6 +61,7 @@ function createWindow(): BrowserWindow {
   mainWindow.on('closed', () => {
     mainWindow = null; //Dereference the window object
     displayWindow.close();
+    toolbarWindow.close();
   });
 
   //Check for updates
@@ -131,6 +137,17 @@ try {
   // Catch Error
   throw e;
 }
+
+//Listen for window focus & hide
+ipcMain.on('toggle-toolbar', (event, isHidden) => {
+  if (isHidden) {
+    //Add toolbar to bottom of screen
+    showToolbar();
+  } else {
+    //Close toolbar
+    hideToolbar();
+  }
+});
 
 // Set api routes
 ipcMain.on('epub-list', () => { listEpubs(); });

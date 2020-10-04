@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container page">
   <h1 class="float-left">Uploaded ePubs</h1>
   <button class="ui button float-right" (click)="uploadEpub()" title="Import a new epub file for display">Import epub</button>
   
@@ -23,6 +23,6 @@
   </div>
 </div>
 
-<sui-dimmer class="page" [isDimmed]="loading">
+<fui-dimmer class="page" [isDimmed]="loading">
   <div class="ui text loader">One moment please - this can take a while...</div>
-</sui-dimmer>
+<fui-dimmer>

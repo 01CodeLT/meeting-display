@@ -6,7 +6,9 @@
 }
 .books {
     clear: both;
-    min-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    height: calc(100vh - 16rem);
     p {
         overflow: hidden;
         color: #616161;

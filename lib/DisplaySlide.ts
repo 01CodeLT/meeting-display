@@ -12,7 +12,7 @@ let displayOptions = {
     textAlign: 'center',
     fontColor: '#696969',
     fontLinkColor: '#4271BD',
-    bgType: 'color', //Can be 'color' or 'pub'
+    bgType: 'pub', //Can be 'color' or 'pub'
     bgColor: '#fff',
     display: {
         selected: 1,
@@ -46,8 +46,6 @@ export function updateDisplayOptions(updatedOptions) {
         });
     } else {
         //Move display to selected
-        console.log(updatedOptions);
-        console.log(displayOptions);
         if(updatedOptions.display.selected !== displayOptions.display.selected) {
             //Close window
             if(displayWindow) {

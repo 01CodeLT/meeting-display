@@ -1,7 +1,4 @@
-<div class="container">
-
-    <a class="btn-back" routerLink="/" tabindex="-1">Back</a>
-
+<div class="container page">
     <h1>Display ePub</h1>
     <div class="ui grid">
         <div class="eight wide column bible-select">
@@ -9,19 +6,25 @@
             <div class="ui attached segment books" (keydown)="selectBook($event);" tabindex="1">
                 <button class="ui button book" *ngFor="let book of epub?.structure; let i = index;" (click)="selectBook(i);" [ngClass]="{'active' : selection.bookIndex == i}" tabindex="-1">{{ book.name }}</button>
             </div>
-            <h3 class="ui top attached header">Chapter</h3>
-            <div class="ui attached segment">
-                <div class="ui input">
-                    <input type="number" [(ngModel)]="selection.chapter" placeholder="1" tabindex="2">
+            <div class="ui grid mt-1">
+                <div class="four wide column">
+                    <h3 class="ui top attached header">Chapter</h3>
+                    <div class="ui attached segment">
+                        <div class="ui input">
+                            <input type="number" [(ngModel)]="selection.chapter" placeholder="1" tabindex="2">
+                        </div>
+                        <small class="message">Enter a single number - "22"</small>
+                    </div>
                 </div>
-                <small class="message">Enter a single number - "22"</small>
-            </div>
-            <h3 class="ui top attached header">Verses</h3>
-            <div class="ui attached segment">
-                <div class="ui input">
-                    <input type="text" [(ngModel)]="selection.verses" placeholder="22-40" tabindex="3">
+                <div class="twelve wide column">
+                    <h3 class="ui top attached header">Verse(s)</h3>
+                    <div class="ui attached segment">
+                        <div class="ui input">
+                            <input type="text" [(ngModel)]="selection.verses" placeholder="22-40" tabindex="3">
+                        </div>
+                        <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
+                    </div>
                 </div>
-                <small class="message">Enter a number - "1", Multiple numbers - "1,42,73" or Number range - "10-22"</small>
             </div>
             <button (click)="addScripture()" class="ui button add" title="Add scripture to final slideshow" tabindex="4">Add scripture(s)</button>
             <div *ngIf="error" class="ui negative message error">
@@ -30,32 +33,13 @@
             </div>
         </div>
         <div class="eight wide column paragraphs">
-            <div class="ui top attached menu">
-                <div class="item">
-                    <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen" tabindex="-1">Toggle display</button>
-                </div>
-                <div class="right menu">
-                    <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide" tabindex="-1">
-                            <i class="icon angle left"></i>
-                        </button>
-                    </div>
-                    <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide" tabindex="-1">
-                            <i class="icon angle right"></i>
-                        </button>
-                    </div>
-                    <div class="item">
-                        <display-options></display-options>
-                    </div>
-                </div>
-            </div>
+            <display-controller></display-controller>
             <div class="ui relaxed divided list">
-                <div *ngFor="let slide of slideshow.slides; let i = index;" class="item">
+                <div *ngFor="let slide of slideshow.slides; let i = index;" [ngClass]="{ 'active': i == slideshow.active }" class="item">
                     <p class="mb-0" [innerHTML]="slide.text | sanitizer : 'html'"></p>
                     <small class="float-right">{{ slide?.name }}</small>
                     <div class="actions">
-                        <i class="close icon" (click)="removeSlide(i);" title="Remove slide"></i>
+                        <i class="close icon" (click)="slidesService.removeSlide(i);" title="Remove slide"></i>
                         <i class="external alternate icon" (click)="slidesService.controlSlides('switch-slide', i)" title="Switch display to this slide"></i>
                     </div>
                 </div>

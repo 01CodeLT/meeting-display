@@ -51,3 +51,5 @@ electron-builder.yml
 .DS_Store
 Thumbs.db
 config
+
+assets/ng-semantic

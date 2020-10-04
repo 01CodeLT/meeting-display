@@ -1,4 +1,5 @@
 import fs = require('fs');
+import * as path from 'path';
 import NeDB = require('nedb');
 import cp = require('child_process');
 import { mainWindow, storagePath } from '../main';
@@ -19,7 +20,7 @@ export function uploadEpub() {
                 mainWindow.webContents.send('epub-upload');
 
                 //Setup import process in background
-                var importProc = cp.fork('./lib/workers/ImportEpub');
+                var importProc = cp.fork(path.resolve(__dirname, 'workers/ImportEpub'));
                 importProc.on('message', ({ status, data = null }) => {
                     //Show error or insert into db
                     if(status == false) {

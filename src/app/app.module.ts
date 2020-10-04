@@ -14,25 +14,37 @@ import { HomeComponent } from './home/home.component';
 import { DragulaModule } from 'ng2-dragula';
 import { NgxElectronModule } from 'ngx-electron';
 import { DisplayComponent } from './display/display/display.component';
+import { ToolbarComponent } from './display/controller/toolbar.component';
 import { PubControllerComponent } from './display/controller/pub/controller.component';
 import { BibleControllerComponent } from './display/controller/bible/controller.component';
+import { MenuLayoutComponent } from './shared/components/menu-layout/menu-layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: MenuLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'controller/pub/:id',
+        component: PubControllerComponent
+      },
+      {
+        path: 'controller/bible/:id',
+        component: BibleControllerComponent
+      }
+    ]
   },
   {
     path: 'display',
     component: DisplayComponent
   },
   {
-    path: 'controller/pub/:id',
-    component: PubControllerComponent
-  },
-  {
-    path: 'controller/bible/:id',
-    component: BibleControllerComponent
+    path: 'controller/toolbar',
+    component: ToolbarComponent
   }
 ];
 
@@ -40,7 +52,9 @@ const routes: Routes = [
   declarations: [
     AppComponent, 
     HomeComponent, 
-    DisplayComponent, 
+    DisplayComponent,
+    ToolbarComponent,
+    MenuLayoutComponent,
     PubControllerComponent,
     BibleControllerComponent
   ],

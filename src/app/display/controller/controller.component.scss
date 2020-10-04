@@ -17,8 +17,11 @@
     .item {
         cursor: grab;
         position: relative;
-        padding-right: 40px;
+        padding: 6px 40px 0px 0px;
     }
+    // .item.active {
+    //     background-color: #eaedef;
+    // }
 }
 
 .paragraphs {
@@ -37,8 +40,8 @@
 }
 
 .actions {
-    top: 5px;
-    right: -4px;
+    top: 4px;
+    right: 0px;
     color: #3e96ca;
     position: absolute;
     
@@ -68,8 +71,10 @@
 /* Bible books */
 .bible-select {
 
+    overflow-y: auto;
+    margin-left: -1rem;
+    height: calc(100vh - 11rem);
     padding-top: .2rem !important;
-    padding-left: 0px !important;
 
     .header {
         padding-bottom: .78571429em !important;
@@ -79,10 +84,6 @@
         width: 100%;
     }
 
-    .books {
-        height: 40vh;
-        overflow-y: auto;
-    }
     .book {
         margin: 0.5%;
         width: 13.25%;

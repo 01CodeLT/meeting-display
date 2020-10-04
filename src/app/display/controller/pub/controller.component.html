@@ -1,7 +1,4 @@
-<div class="container">
-
-    <a class="btn-back" routerLink="/">Back</a>
-
+<div class="container page">
     <h1>Display ePub</h1>
     <div class="ui grid">
         <div class="four wide column pages">
@@ -25,7 +22,7 @@
                     <button class="ui button" (click)="addAllSlides()" title="Add all the paragraphs below to the slideshow">Add all paragraphs</button>
                 </div>
             </div>
-            <div class="ui relaxed divided list" dragula="DRAGULA_FACTS" [(dragulaModel)]="epubPage.content" id="left">
+            <div class="ui relaxed divided list" dragula="DRAGULA_SLIDES" [(dragulaModel)]="epubPage.content" id="left">
                 <ng-container *ngFor="let content of epubPage?.content; let i = index;">
                     <div *ngIf="!content.name; else namedContent" class="item">
                         <p [innerHTML]="content.text | sanitizer : 'html'"></p>
@@ -38,32 +35,13 @@
             </div>
         </div>
         <div class="six wide column paragraphs">
-            <div class="ui top attached menu">
-                <div class="item">
-                    <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen">Toggle display</button>
-                </div>
-                <div class="right menu">
-                    <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide">
-                            <i class="icon angle left"></i>
-                        </button>
-                    </div>
-                    <div class="item">
-                        <button class="ui button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide">
-                            <i class="icon angle right"></i>
-                        </button>
-                    </div>
-                    <div class="item">
-                        <display-options></display-options>
-                    </div>
-                </div>
-            </div>
-            <div class="ui relaxed divided list" dragula="DRAGULA_FACTS" [(dragulaModel)]="slideshow.slides" (dragulaModelChange)="updateSlides()" id="right">
-                <div *ngFor="let slide of slideshow.slides; let i = index;" class="item">
+            <display-controller></display-controller>
+            <div class="ui relaxed divided list" dragula="DRAGULA_SLIDES" [dragulaModel]="slideshow.slides" (dragulaModelChange)="slidesService.updateSlides(epub, $event)" id="right">
+                <div *ngFor="let slide of slideshow.slides; let i = index;" [ngClass]="{ 'active': i == slideshow.active }" class="item">
                     <p class="mb-0" [innerHTML]="slide.text | sanitizer : 'html'"></p>
                     <small class="float-right">{{ slide?.name }}</small>
                     <div class="actions">
-                        <i class="close icon" (click)="removeSlide(i);" title="Remove slide"></i>
+                        <i class="close icon" (click)="slidesService.removeSlide(i);" title="Remove slide"></i>
                         <i class="external alternate icon" (click)="slidesService.controlSlides('switch-slide', i)" title="Switch display to this slide"></i>
                     </div>
                 </div>

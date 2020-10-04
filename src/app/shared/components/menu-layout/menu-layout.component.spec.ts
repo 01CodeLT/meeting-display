@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DisplayOptionsComponent } from './display-options.component';
+import { MenuLayoutComponent } from './menu-layout.component';
 
-describe('DisplayOptionsComponent', () => {
-  let component: DisplayOptionsComponent;
-  let fixture: ComponentFixture<DisplayOptionsComponent>;
+describe('MenuLayoutComponent', () => {
+  let component: MenuLayoutComponent;
+  let fixture: ComponentFixture<MenuLayoutComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DisplayOptionsComponent ]
+      declarations: [MenuLayoutComponent]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisplayOptionsComponent);
+    fixture = TestBed.createComponent(MenuLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

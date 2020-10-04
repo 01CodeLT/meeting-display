@@ -1,0 +1,92 @@
+<div class="ui menu">
+    <div class="item">
+        <img src="/assets/icons/favicon.png">
+    </div>
+    <a class="item" routerLink="/">
+        All books
+    </a>
+    <a (click)="uploadEpub()" class="item">
+        Import epub
+    </a>
+    <a (click)="openSettings()" class="item">
+        Settings
+    </a>
+    <a class="item">
+        Help
+    </a>
+    <div class="right menu">
+        <a (click)="minimizeWindow()" class="item">
+            <i class="window minimize icon"></i>
+        </a>
+        <a (click)="maximizeWindow()" class="item">
+            <i class="window {{ window.maximizable ? 'maximize' : 'restore' }} icon"></i>
+        </a>
+        <a (click)="closeWindow()" class="item">
+            <i class="close icon"></i>
+        </a>
+    </div>
+</div>
+<router-outlet></router-outlet>
+
+<!-- Modals -->
+<ng-template let-context let-modal="modal" #settingsModal>
+    <div class="header">Settings</div>
+    <div class="content">
+        <div class="ui grid container settings">
+            <div class="four wide column">
+                <div class="header">Font size</div>
+                <div class="ui input" title="Changing font size during slide display restarts the slideshow from the beginning!">
+                    <input type="number" [(ngModel)]="settings.fontSize" (keyup)="updateOptions()" (change)="updateOptions()">
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="header">Font color</div>
+                <div class="ui input">
+                    <input type="color" [(ngModel)]="settings.fontColor" (input)="updateOptions()">
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="header">Font link color</div>
+                <div class="ui input">
+                    <input type="color" [(ngModel)]="settings.fontLinkColor" (input)="updateOptions()">
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="header">Text alignment</div>
+                <div class="ui icon buttons">
+                    <button (click)="settings.textAlign = 'left'; updateOptions();" class="ui button"><i class="align left icon"></i></button>
+                    <button (click)="settings.textAlign = 'center'; updateOptions();" class="ui button"><i class="align center icon"></i></button>
+                    <button (click)="settings.textAlign = 'right'; updateOptions();" class="ui button"><i class="align right icon"></i></button>
+                </div>
+            </div>
+            <div class="sixteen wide column pt-0">
+                <p class="message negative">Changing font size during slide display restarts the slideshow from the beginning!</p>
+            </div>
+            <div class="four wide column">
+                <div class="header">Background type</div>
+                <div class="ui input">
+                    <select class="ui dropdown input" [(ngModel)]="settings.bgType" (change)="updateOptions()">
+                        <option ngValue="pub">Publication cover</option>
+                        <option ngValue="color">Plain color</option>
+                    </select>
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="header">Background color</div>
+                <div class="ui input">
+                    <input type="color" [(ngModel)]="settings.bgColor" (input)="updateOptions()">
+                </div>
+            </div>
+            <div class="eight wide column">
+
+            </div>
+            <div class="four wide column">
+                <div class="header">Display on</div>
+                <select class="ui dropdown input" [(ngModel)]="settings.display.selected" (change)="updateOptions()">
+                    <option *ngFor="let option of settings.display.list" [ngValue]="option">PC Display: {{ option }}</option>
+                </select>
+            </div>
+        </div>
+        <button style="margin-bottom: 1.5rem" class="ui primary button float-right" (click)="modal.approve('approved')">Done</button>
+    </div>
+</ng-template>

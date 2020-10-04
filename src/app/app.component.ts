@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +9,7 @@ export class AppComponent {
 
   toggles = { menu: false, addEpub: false };
 
-  constructor(private electronService: ElectronService) {}
+  constructor() {}
 
   ngOnInit() {}
-    
 }

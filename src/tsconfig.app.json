@@ -7,7 +7,7 @@
     "types": []
   },
   "include": [
-    "**/*.ts",
+    "**/*.ts"
 
   ],
   "exclude": [
@@ -16,6 +16,6 @@
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
-    "preserveWhitespaces": true
+    "preserveWhitespaces": true,
   }
 }

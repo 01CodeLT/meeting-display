@@ -94,8 +94,6 @@ export class DisplayComponent implements OnInit {
         this.settings.textHeight = numLines >= this.settings.numLines ? (this.settings.numLines * this.settings.lineHeight) : textHeight; 
         this.slideshow.slides[this.slideshow.active].spans = Math.ceil(numLines / this.settings.numLines);
         this.changeDetector.detectChanges();
-
-        console.log(this.slideshow.slides);
     }
  
     nextSlide() {

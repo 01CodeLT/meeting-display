@@ -1,0 +1,20 @@
+<div class="ui top attached menu">
+    <div class="item">
+        <button class="ui button" (click)="slidesService.displaySlides()" title="Show/close slideshow on second screen">Toggle display</button>
+    </div>
+    <div class="item">
+        <button class="ui button" (click)="slidesService.removeAllSlides()" title="Clear all slides from list">Clear all</button>
+    </div>
+    <div class="right menu">
+        <div class="item">
+            <button class="ui icon button" (click)="slidesService.controlSlides('previous-slide')" title="Switch to previous slide">
+                <i class="icon angle left"></i>
+            </button>
+        </div>
+        <div class="item">
+            <button class="ui icon button" (click)="slidesService.controlSlides('next-slide')" title="Switch to next slide">
+                <i class="icon angle right"></i>
+            </button>
+        </div>
+    </div>
+</div>

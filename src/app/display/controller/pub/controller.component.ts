@@ -1,33 +1,31 @@
 import { ActivatedRoute, Params } from '@angular/router';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SlidesService, Epub } from '../../../shared/services/slides.service';
 
 import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from 'ngx-electron';
-import { clearTimeout, setTimeout } from 'timers';
-
+import { ControllerComponent } from '../controller.component';
+import { SlidesService, Epub } from '../../../shared/services/slides.service';
 
 @Component({
   selector: 'app-pub-controller',
   templateUrl: './controller.component.html',
   styleUrls: ['../controller.component.scss']
 })
-export class PubControllerComponent implements OnInit {
+export class PubControllerComponent extends ControllerComponent implements OnInit {
 
-  epub: Epub;
   epubPage = { content: [] };
-  slideshow = { slides: [], active: 0 };
 
   constructor(
+    public slidesService: SlidesService,
+    public electronService: ElectronService,
+    public changeDetector: ChangeDetectorRef,
     private dragulaService: DragulaService,
     private activatedRoute: ActivatedRoute,
-    private electronService: ElectronService,
-    private changeDetector: ChangeDetectorRef,
-    public slidesService: SlidesService
-  ) { }
+  ) { super(slidesService, electronService, changeDetector) }
 
   ngOnInit() {
     //Get epub content
+    super.ngOnInit();
     this.activatedRoute.params.subscribe((params: Params) => {
       this.electronService.ipcRenderer.send('epub-get', params['id']);
       this.electronService.ipcRenderer.once('epub-get', (event, epub) => {
@@ -38,7 +36,7 @@ export class PubControllerComponent implements OnInit {
     });
 
     //Setup dragula
-    this.dragulaService.createGroup('DRAGULA_FACTS', {
+    this.dragulaService.createGroup('DRAGULA_SLIDES', {
       copy: (el, source) => {
         return source.id === 'left';
       },
@@ -83,17 +81,8 @@ export class PubControllerComponent implements OnInit {
     });
     
     //Add to final array
-    this.slideshow.slides = this.slideshow.slides.concat(slides);
-    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
-  }
-
-  updateSlides() {
-    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
-  }
-
-  removeSlide(index) {
-    this.slideshow.slides.splice(index, 1);
-    this.slidesService.updateSlides(this.epub, this.slideshow.slides);
+    slides = this.slideshow.slides.concat(slides);
+    this.slidesService.updateSlides(this.epub, slides);
   }
 
   ngOnDestroy() {
