@@ -36,7 +36,7 @@
         </div>
         <div class="six wide column paragraphs">
             <display-controller></display-controller>
-            <div class="ui relaxed divided list" dragula="DRAGULA_SLIDES" [dragulaModel]="slideshow.slides" (dragulaModelChange)="slidesService.updateSlides(epub, $event)" id="right">
+            <div class="ui relaxed divided list" dragula="DRAGULA_SLIDES" [dragulaModel]="slideshow.slides" (dragulaModelChange)="slidesService.updateSlides(epub, { slides: $event, active: slideshow.active })" id="right">
                 <div *ngFor="let slide of slideshow.slides; let i = index;" [ngClass]="{ 'active': i == slideshow.active }" class="item">
                     <p class="mb-0" [innerHTML]="slide.text | sanitizer : 'html'"></p>
                     <small class="float-right">{{ slide?.name }}</small>

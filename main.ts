@@ -153,7 +153,7 @@ ipcMain.on('toggle-toolbar', (event, isHidden) => {
 ipcMain.on('epub-list', () => { listEpubs(); });
 ipcMain.on('epub-upload', () => { uploadEpub(); });
 ipcMain.on('epub-get', (event, id) => { getEpub(id); });
-ipcMain.on('slides-get', (event) => { updateSlides(); });
+ipcMain.on('slides-get', (event) => { updateSlides(event); });
 ipcMain.on('epub-remove', (event, id) => { removeEpub(id); });
 ipcMain.on('slides-display', (event) => { toggleDisplay(); });
 ipcMain.on('epub-list-filter', (event, filters) => { listEpubsFiltered(filters); });
@@ -161,4 +161,4 @@ ipcMain.on('epub-get-page', (event, id, page) => { parseEpubPage(id, page); });
 ipcMain.on('bibleepub-get-ref', (event, id, ref) => { getEpubPageRef(id, ref); });
 ipcMain.on('slides-options', (event, options = null) => { updateDisplayOptions(options); });
 ipcMain.on('slides-control', (event, action, ...args) => { controlDisplay(action, ...args); });
-ipcMain.on('slides-update', (event, selectedEpub = null, slideList = null) => { updateSlides(selectedEpub, slideList); });
+ipcMain.on('slides-update', (event, selectedEpub = null, slideList = null) => { updateSlides(event, selectedEpub, slideList); });

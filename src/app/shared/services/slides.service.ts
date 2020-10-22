@@ -23,13 +23,18 @@ export interface Epub {
 @Injectable()
 export class SlidesService {
 
-    private epub;
+    public epub;
     public slideshowSource = new BehaviorSubject({ slides: [], active: 0 });
     slideshow = this.slideshowSource.asObservable();
 
-    constructor(private electronService: ElectronService) {}
+    constructor(private electronService: ElectronService) {
+        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
+            this.epub = epub;
+            this.slideshowSource.next(slideshow);
+        });
+    }
 
-    public updateSlides(epub, slides) {
+    public updateSlides(epub, slideshow) {
         //Update variables
         this.epub = {
             id: epub.id,
@@ -38,20 +43,23 @@ export class SlidesService {
             image: epub.image,
             author: epub.author
         };
-        this.slideshowSource.next({ slides: slides, active: this.slideshowSource.value.active });
 
         //Send to electron app
-        this.electronService.ipcRenderer.send('slides-update', this.epub, slides);
+        this.slideshowSource.next(slideshow);
+        this.electronService.ipcRenderer.send('slides-update', this.epub, slideshow);
     }
 
     public removeSlide(index) {
         let slideshow = this.slideshowSource.value;
         slideshow.slides.splice(index, 1);
-        this.updateSlides(this.epub, slideshow.slides);
+        this.updateSlides(this.epub, slideshow);
     }
 
     public removeAllSlides() {
-        this.updateSlides(this.epub, []);
+        this.updateSlides(this.epub, {
+            slides: [],
+            active: this.slideshowSource.value.active
+        });
     }
 
     public displaySlides() {

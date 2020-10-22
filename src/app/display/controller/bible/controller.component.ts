@@ -71,11 +71,22 @@ export class BibleControllerComponent extends ControllerComponent implements OnI
       } else {
         this.error = null;
         content.forEach((item) => {
-          this.slideshow.slides.push({ spans: 1, activeSpan: 0, text: item.text, name: (item.name || null) });
+          this.slideshow.slides.push({ 
+            uid: Math.floor(Math.random() * 1000 + Date.now()),
+            spans: 1, 
+            activeSpan: 0, 
+            text: item.text, 
+            name: (item.name || null) 
+          });
         });
-        this.slidesService.updateSlides(this.epub, this.slideshow.slides);
+        this.slidesService.updateSlides(this.epub, this.slideshow);
       }
       this.changeDetector.detectChanges();
     });
+  }
+
+  ngOnDestroy() {
+    //Reset slides
+    this.slidesService.updateSlides(this.epub, { slides: [], active: 0 });
   }
 }

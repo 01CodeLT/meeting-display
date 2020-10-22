@@ -25,6 +25,11 @@ export class ControllerComponent {
         });
     }
 
+    ngOnDestroy() {
+        //Reset slides
+        this.slidesService.updateSlides(this.epub, { slides: [], active:0 });
+    }
+
     @HostListener('document:visibilitychange', ['$event'])
     visibilityChange() {
         this.electronService.ipcRenderer.send('toggle-toolbar', document.hidden);

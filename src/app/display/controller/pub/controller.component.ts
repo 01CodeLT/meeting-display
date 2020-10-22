@@ -21,7 +21,28 @@ export class PubControllerComponent extends ControllerComponent implements OnIni
     public changeDetector: ChangeDetectorRef,
     private dragulaService: DragulaService,
     private activatedRoute: ActivatedRoute,
-  ) { super(slidesService, electronService, changeDetector) }
+  ) {
+    //For parent
+    super(slidesService, electronService, changeDetector);
+    
+    //Setup dragula
+    dragulaService.createGroup('DRAGULA_SLIDES', {
+      copy: (el, source) => {
+        return source.id === 'left';
+      },
+      copyItem: (item) => ({
+        uid: Math.floor(Math.random() * 1000 + Date.now()),
+        spans: 1,
+        activeSpan: 0,
+        text: item.text,
+        name: (item.name || null)
+      }),
+      accepts: (el, target, source, sibling) => {
+        // To avoid dragging from right to left container
+        return target.id !== 'left';
+      }
+    });
+  }
 
   ngOnInit() {
     //Get epub content
@@ -33,20 +54,6 @@ export class PubControllerComponent extends ControllerComponent implements OnIni
         this.epub.structure_filtered = epub.structure;
         this.changeDetector.detectChanges();
       });
-    });
-
-    //Setup dragula
-    this.dragulaService.createGroup('DRAGULA_SLIDES', {
-      copy: (el, source) => {
-        return source.id === 'left';
-      },
-      copyItem: (item) => {
-        return { spans: 1, activeSpan: 0, text: item.text, name: (item.name || null) };
-      },
-      accepts: (el, target, source, sibling) => {
-        // To avoid dragging from right to left container
-        return target.id !== 'left';
-      }
     });
   }
 
@@ -76,16 +83,25 @@ export class PubControllerComponent extends ControllerComponent implements OnIni
     let slides = [];
     this.epubPage.content.forEach((item) => {
       if(item.type == 'paragraph') {
-        slides.push({ spans: 1, activeSpan: 0, text: item.text, name: (item.name || null) });
+        slides.push({ 
+          uid: Math.floor(Math.random() * 1000 + Date.now()),
+          spans: 1, 
+          activeSpan: 0, 
+          text: item.text, 
+          name: (item.name || null) 
+        });
       }
     });
     
     //Add to final array
     slides = this.slideshow.slides.concat(slides);
-    this.slidesService.updateSlides(this.epub, slides);
+    this.slidesService.updateSlides(this.epub, {
+      slides: slides,
+      active: this.slideshow.active
+    });
   }
 
   ngOnDestroy() {
-    this.dragulaService.destroy('DRAGULA_FACTS');
+    this.dragulaService.destroy('DRAGULA_SLIDES');
   }
 }

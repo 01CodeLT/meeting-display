@@ -17,11 +17,11 @@
     .item {
         cursor: grab;
         position: relative;
-        padding: 6px 40px 0px 0px;
+        padding: 6px 40px 0px 4px;
     }
-    // .item.active {
-    //     background-color: #eaedef;
-    // }
+    .item.active {
+        background-color: #eaedef;
+    }
 }
 
 .paragraphs {

@@ -7,7 +7,7 @@
     </div>
 
     <div class="text-clip" [ngStyle]="{'max-height': (settings.textHeight + 'px')}">
-        <div #textElement class="text" [ngStyle]="{'margin-top': (-settings.textY + 'px')}" [innerHTML]="slideshow.slides[slideshow.active]?.text"></div>
+        <div #textElement class="text" [ngStyle]="{'margin-top': (-settings.textY + 'px')}" [innerHTML]="slideshow.slides[slideshow.active]?.text | sanitizer : 'html'"></div>
     </div>
     
     <small class="name">{{ slideshow.slides[slideshow.active]?.name }}</small>

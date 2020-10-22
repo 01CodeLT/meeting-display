@@ -2,10 +2,10 @@ import * as url from 'url';
 import * as path from 'path';
 import NeDB = require('nedb');
 import { serve, mainWindow } from '../main';
-import { BrowserWindow, screen, app } from 'electron';
+import { BrowserWindow, screen, app, ipcMain, ipcRenderer } from 'electron';
 
 let epub;
-let slides = [];
+let slideshow = { slides: [], active: 0 };
 export let displayWindow;
 let displayOptions = {
     fontSize: 40,
@@ -36,12 +36,14 @@ export function controlDisplay(action, ...args) {
 }
 
 export function updateDisplayOptions(updatedOptions) {
+    console.log('hello');
     if (updatedOptions == null) {
         //Get saved options
         optionsStorage.findOne({ _id: 'display' }, (err, doc) => {
             displayOptions = doc ? doc.values : displayOptions;
             displayOptions.display.list = getDisplayList();
             mainWindow.webContents.send('slides-options', displayOptions);
+            console.log(displayWindow);
             if (displayWindow) displayWindow.webContents.send('slides-options', displayOptions);
         });
     } else {
@@ -61,19 +63,23 @@ export function updateDisplayOptions(updatedOptions) {
         //Update options
         optionsStorage.update({ _id: 'display' }, { _id: 'display', values: updatedOptions }, { upsert: true }, (err, numReplaced, upsert) => {
             displayOptions.display.list = getDisplayList();
+            mainWindow.webContents.send('slides-options', displayOptions);
+            console.log(displayWindow, displayOptions);
             if (displayWindow) displayWindow.webContents.send('slides-options', displayOptions);
         });
     }
 }
 
-export function updateSlides(selectedEpub = null, slideList = null) {
-    epub = selectedEpub || epub;
-    slides = slideList || slides;
-    if(displayWindow) {
-        displayWindow.webContents.send('slides-update', 
-            epub, slides
-        );
-    }
+export function updateSlides(event, updatedEpub = null, updatedSlideshow = null) {
+    epub = updatedEpub || epub;
+    slideshow = updatedSlideshow || slideshow;
+
+    //Publish event to other windows
+    BrowserWindow.getAllWindows().forEach(window => {
+        if(window.id !== event.sender.id) {
+            window.webContents.send('slides-update', epub, slideshow);
+        }
+    });
 }
 
 export function toggleDisplay() {

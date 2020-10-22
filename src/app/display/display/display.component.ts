@@ -1,9 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject, NgZone } from '@angular/core';
 
 import { ElectronService } from 'ngx-electron';
-import { Epub } from '../../shared/services/slides.service';
-import * as console from 'console';
+import { Epub, SlidesService } from '../../shared/services/slides.service';
 
 @Component({
     selector: 'app-display',
@@ -16,11 +15,12 @@ export class DisplayComponent implements OnInit {
     customStyleTag;
     
     epub: Epub;
-    slideshow = { slides: [], active: 0 };
+    slideshow = { slides: [], active: null };
     settings: any = { fontSize: 0, lineHeight: 0, numLines: 6, textHeight: 200, textY: 0 };
 
     constructor(
         @Inject(DOCUMENT) private doc,
+        private slidesService: SlidesService,
         private electronService: ElectronService,
         private changeDetector: ChangeDetectorRef
     ) { }
@@ -29,16 +29,26 @@ export class DisplayComponent implements OnInit {
 
     ngAfterViewInit() {
         //Listen for slides update
-        this.electronService.ipcRenderer.on('slides-update', (event, epub, slides) => {
+        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
             //Set epub, slides
             this.epub = epub;
-            this.slideshow.slides = slides;
-            this.slideshow.active = (this.slideshow.active > (slides.length - 1)) ? 0 : this.slideshow.active;
+
+            //Find previous slide or reset to 0
+            console.log(this.slideshow.slides, this.slideshow.slides[this.slideshow.active]);
+            let prevSlide = slideshow.slides.findIndex(
+                (slide) => slide.uid == (this.slideshow.slides[this.slideshow.active] ? this.slideshow.slides[this.slideshow.active].uid : null)
+            );
+            console.log(prevSlide);
+            this.slideshow.active = (prevSlide >= 0) ? prevSlide : 0;
+            console.log(this.slideshow.active)
+            //Set slides and run change detection
+            this.slideshow.slides = slideshow.slides;
             this.changeDetector.detectChanges();
 
             //Recalculate text height
             this.calcTextHeight();
         });
+        this.electronService.ipcRenderer.send('slides-update');
 
         //Listen for slide controls
         this.electronService.ipcRenderer.on('slides-control', (event, action, ...args) => {
@@ -52,7 +62,6 @@ export class DisplayComponent implements OnInit {
         this.doc.head.appendChild(this.customStyleTag);
 
         //Listen for slide display options
-        this.electronService.ipcRenderer.send('slides-options');
         this.electronService.ipcRenderer.on('slides-options', (event, options) => {
             
             //Calculate max line number and set height
@@ -70,7 +79,7 @@ export class DisplayComponent implements OnInit {
                 .display .text-clip { text-align: ${options.textAlign}; }
                 .display a { color: ${options.fontLinkColor}; }
             `;
-
+            console.log(options);
             setTimeout(() => {
                 //Reset slides
                 this.changeDetector.detectChanges();
@@ -84,6 +93,7 @@ export class DisplayComponent implements OnInit {
                 this.changeDetector.detectChanges();
             }, 500);
         });
+        this.electronService.ipcRenderer.send('slides-options');
     }
 
     calcTextHeight() {
@@ -104,6 +114,7 @@ export class DisplayComponent implements OnInit {
                 //Move slides forward
                 this.slideshow.active++;
                 this.calcTextHeight();
+                this.slideshow.slides[this.slideshow.active].activeSpan = 0;
             }
         } else {
             activeSlide.activeSpan++;
@@ -111,6 +122,7 @@ export class DisplayComponent implements OnInit {
 
         //Set y axis and change detection
         this.settings.textY = (this.settings.lineHeight * this.settings.numLines) * (this.slideshow.slides[this.slideshow.active].activeSpan);
+        this.slidesService.updateSlides(this.epub, this.slideshow);
         this.changeDetector.detectChanges();
     }
 
@@ -122,6 +134,7 @@ export class DisplayComponent implements OnInit {
                 //Move slides backward
                 this.slideshow.active--;
                 this.calcTextHeight();
+                this.slideshow.slides[this.slideshow.active].activeSpan = this.slideshow.slides[this.slideshow.active].spans - 1;
             }
         } else {
             activeSlide.activeSpan--;
@@ -129,6 +142,7 @@ export class DisplayComponent implements OnInit {
 
         //Set y axis and change detection
         this.settings.textY = (this.settings.lineHeight * this.settings.numLines) * (this.slideshow.slides[this.slideshow.active].activeSpan);
+        this.slidesService.updateSlides(this.epub, this.slideshow);
         this.changeDetector.detectChanges();
     }
 
@@ -143,6 +157,7 @@ export class DisplayComponent implements OnInit {
         //Set y axis
         this.calcTextHeight();
         this.settings.textY = (this.settings.lineHeight * this.settings.numLines) * (this.slideshow.slides[this.slideshow.active].activeSpan);
+        this.slidesService.updateSlides(this.epub, this.slideshow);
         this.changeDetector.detectChanges();
     }
 }
