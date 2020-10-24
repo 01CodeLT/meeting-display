@@ -19,7 +19,7 @@ let displayOptions = {
         list: []
     }
 }
-const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true });
+export const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true });
 
 app.on('ready', () => {
     //Set display options and listen for changes
@@ -98,8 +98,7 @@ export function toggleDisplay() {
                     allowRunningInsecureContent: (serve) ? true : false,
                 },
                 fullscreen: true,
-                title: 'Meeting display',
-                icon: __dirname + '/../icon.ico'
+                title: 'Meeting display'
             });
 
             //Set as fullscreen

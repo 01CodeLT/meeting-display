@@ -2,6 +2,7 @@ import * as url from 'url';
 import * as path from 'path';
 import NeDB = require('nedb');
 import { serve, mainWindow } from '../main';
+import { optionsStorage } from './DisplaySlide';
 import { BrowserWindow, app, screen } from 'electron';
 
 export let toolbarWindow;
@@ -10,8 +11,6 @@ let toolbarOptions = {
     x: 0,
     y: 0
 }
-
-const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true });
 
 app.on('ready', () => {
     //Set toolbar options on startup
@@ -36,8 +35,7 @@ export function showToolbar() {
             frame: false,
             transparent: true,
             alwaysOnTop: true,
-            resizable: false,
-            icon: __dirname + '/../icon.ico'
+            resizable: false
         });
 
         //Remove menu
