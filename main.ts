@@ -5,7 +5,7 @@ import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, screen, protocol, ipcMain, dialog, remote } from 'electron';
 
 import { showToolbar, hideToolbar, toolbarWindow } from './lib/ControlToolbar';
-import { displayWindow, toggleDisplay, controlDisplay, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
+import { displayWindow, toggleDisplay, controlDisplay, getSlides, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
 import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, getEpubPageRef, parseEpubPage, removeEpub } from './lib/EpubManager';
 
 debug();
@@ -13,6 +13,13 @@ debug();
 //Setup nucleus analytics - anonymous
 const Nucleus = require('nucleus-nodejs');
 Nucleus.init('5f13691da5d05e6842655618', { autoUserId: true });
+
+//Load settings db
+import NeDB = require('nedb');
+export const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true, onload: (err) => {
+  console.log('db loaded');
+  console.log(err);
+}});
 
 export var mainWindow: BrowserWindow = null;
 export const storagePath = app.getPath('userData') + '/storage/';
@@ -153,7 +160,7 @@ ipcMain.on('toggle-toolbar', (event, isHidden) => {
 ipcMain.on('epub-list', () => { listEpubs(); });
 ipcMain.on('epub-upload', () => { uploadEpub(); });
 ipcMain.on('epub-get', (event, id) => { getEpub(id); });
-ipcMain.on('slides-get', (event) => { updateSlides(event); });
+ipcMain.on('slides-get', (event) => { getSlides(event); });
 ipcMain.on('epub-remove', (event, id) => { removeEpub(id); });
 ipcMain.on('slides-display', (event) => { toggleDisplay(); });
 ipcMain.on('epub-list-filter', (event, filters) => { listEpubsFiltered(filters); });

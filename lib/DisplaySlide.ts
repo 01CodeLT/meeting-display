@@ -1,8 +1,7 @@
 import * as url from 'url';
 import * as path from 'path';
-import NeDB = require('nedb');
-import { serve, mainWindow } from '../main';
-import { BrowserWindow, screen, app, ipcMain, ipcRenderer } from 'electron';
+import { serve, mainWindow, optionsStorage } from '../main';
+import { BrowserWindow, screen, app } from 'electron';
 
 let epub;
 let slideshow = { slides: [], active: 0 };
@@ -19,7 +18,6 @@ let displayOptions = {
         list: []
     }
 }
-const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true });
 
 app.on('ready', () => {
     //Set display options and listen for changes
@@ -36,14 +34,12 @@ export function controlDisplay(action, ...args) {
 }
 
 export function updateDisplayOptions(updatedOptions) {
-    console.log('hello');
     if (updatedOptions == null) {
         //Get saved options
         optionsStorage.findOne({ _id: 'display' }, (err, doc) => {
             displayOptions = doc ? doc.values : displayOptions;
             displayOptions.display.list = getDisplayList();
             mainWindow.webContents.send('slides-options', displayOptions);
-            console.log(displayWindow);
             if (displayWindow) displayWindow.webContents.send('slides-options', displayOptions);
         });
     } else {
@@ -64,10 +60,14 @@ export function updateDisplayOptions(updatedOptions) {
         optionsStorage.update({ _id: 'display' }, { _id: 'display', values: updatedOptions }, { upsert: true }, (err, numReplaced, upsert) => {
             displayOptions.display.list = getDisplayList();
             mainWindow.webContents.send('slides-options', displayOptions);
-            console.log(displayWindow, displayOptions);
             if (displayWindow) displayWindow.webContents.send('slides-options', displayOptions);
         });
     }
+}
+
+export function getSlides(event) {
+    //Send slides to window
+    event.sender.send('slides-update', epub, slideshow);
 }
 
 export function updateSlides(event, updatedEpub = null, updatedSlideshow = null) {

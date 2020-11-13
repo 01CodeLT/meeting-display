@@ -44,6 +44,14 @@ export class SlidesService {
             author: epub.author
         };
 
+        //Search for active slide
+        if (slideshow.active == this.slideshowSource.value.active) {
+            let prevSlide = slideshow.slides.findIndex(
+                (slide) => slide.uid == (this.slideshowSource.value.slides[this.slideshowSource.value.active] ? this.slideshowSource.value.slides[this.slideshowSource.value.active].uid : null)
+            );
+            slideshow.active = (prevSlide >= 0) ? prevSlide : 0;
+        }
+
         //Send to electron app
         this.slideshowSource.next(slideshow);
         this.electronService.ipcRenderer.send('slides-update', this.epub, slideshow);

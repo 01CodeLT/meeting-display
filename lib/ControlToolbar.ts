@@ -1,7 +1,6 @@
 import * as url from 'url';
 import * as path from 'path';
-import NeDB = require('nedb');
-import { serve, mainWindow } from '../main';
+import { serve, mainWindow, optionsStorage } from '../main';
 import { BrowserWindow, app, screen } from 'electron';
 
 export let toolbarWindow;
@@ -10,8 +9,6 @@ let toolbarOptions = {
     x: 0,
     y: 0
 }
-
-const optionsStorage = new NeDB({ filename: app.getPath('userData') + '/storage/preferences', autoload: true });
 
 app.on('ready', () => {
     //Set toolbar options on startup
@@ -52,7 +49,6 @@ export function showToolbar() {
 
         //Electron config
         if (serve) {
-            toolbarWindow.webContents.openDevTools();
             require('electron-reload')(__dirname, {
                 electron: require(`${__dirname}/../node_modules/electron`)
             });

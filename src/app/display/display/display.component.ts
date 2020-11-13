@@ -15,7 +15,7 @@ export class DisplayComponent implements OnInit {
     customStyleTag;
     
     epub: Epub;
-    slideshow = { slides: [], active: null };
+    slideshow = { slides: [], active: 0 };
     settings: any = { fontSize: 0, lineHeight: 0, numLines: 6, textHeight: 200, textY: 0 };
 
     constructor(
@@ -28,28 +28,6 @@ export class DisplayComponent implements OnInit {
     ngOnInit() {}
 
     ngAfterViewInit() {
-        //Listen for slides update
-        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
-            //Set epub, slides
-            this.epub = epub;
-
-            //Find previous slide or reset to 0
-            console.log(this.slideshow.slides, this.slideshow.slides[this.slideshow.active]);
-            let prevSlide = slideshow.slides.findIndex(
-                (slide) => slide.uid == (this.slideshow.slides[this.slideshow.active] ? this.slideshow.slides[this.slideshow.active].uid : null)
-            );
-            console.log(prevSlide);
-            this.slideshow.active = (prevSlide >= 0) ? prevSlide : 0;
-            console.log(this.slideshow.active)
-            //Set slides and run change detection
-            this.slideshow.slides = slideshow.slides;
-            this.changeDetector.detectChanges();
-
-            //Recalculate text height
-            this.calcTextHeight();
-        });
-        this.electronService.ipcRenderer.send('slides-update');
-
         //Listen for slide controls
         this.electronService.ipcRenderer.on('slides-control', (event, action, ...args) => {
             //Convert action to camelCase and run
@@ -79,7 +57,7 @@ export class DisplayComponent implements OnInit {
                 .display .text-clip { text-align: ${options.textAlign}; }
                 .display a { color: ${options.fontLinkColor}; }
             `;
-            console.log(options);
+
             setTimeout(() => {
                 //Reset slides
                 this.changeDetector.detectChanges();
@@ -94,6 +72,22 @@ export class DisplayComponent implements OnInit {
             }, 500);
         });
         this.electronService.ipcRenderer.send('slides-options');
+
+        //Listen for slides update
+        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
+            //Set epub, slides
+            this.epub = epub;
+
+            //Set slides and run change detection
+            this.slideshow.active = slideshow.active;
+            this.slideshow.slides = slideshow.slides;
+
+            this.changeDetector.detectChanges();
+
+            //Recalculate text height
+            this.calcTextHeight();
+        });
+        this.electronService.ipcRenderer.send('slides-get');
     }
 
     calcTextHeight() {
