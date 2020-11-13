@@ -43,8 +43,7 @@ function createWindow(): BrowserWindow {
       nodeIntegrationInWorker: true,
       allowRunningInsecureContent: (serve) ? true : false,
     },
-    title: 'Meeting display',
-    icon: __dirname + '/icon.ico'
+    title: 'Meeting display'
   });
   mainWindow.removeMenu();
   app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -155,6 +154,11 @@ ipcMain.on('toggle-toolbar', (event, isHidden) => {
     hideToolbar();
   }
 });
+
+// Catch node errors
+process.on('uncaughtException', (err) => {
+  console.log(err);
+})
 
 // Set api routes
 ipcMain.on('epub-list', () => { listEpubs(); });

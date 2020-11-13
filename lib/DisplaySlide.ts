@@ -98,8 +98,7 @@ export function toggleDisplay() {
                     allowRunningInsecureContent: (serve) ? true : false,
                 },
                 fullscreen: true,
-                title: 'Meeting display',
-                icon: __dirname + '/../icon.ico'
+                title: 'Meeting display'
             });
 
             //Set as fullscreen

@@ -19,7 +19,7 @@
     "electron:serve-tsc": "tsc -p tsconfig-serve.json",
     "build": "npm run electron:serve-tsc && ng build --base-href ./",
     "deploy:app": "npm run build:prod && electron-builder build --win --config electron-builder.yml --publish always",
-    "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
+    "electron:serve": "npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build": "npm run build:prod && electron-builder build --config electron-builder.yml",
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",

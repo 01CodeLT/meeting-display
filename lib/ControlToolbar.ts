@@ -33,8 +33,7 @@ export function showToolbar() {
             frame: false,
             transparent: true,
             alwaysOnTop: true,
-            resizable: false,
-            icon: __dirname + '/../icon.ico'
+            resizable: false
         });
 
         //Remove menu
