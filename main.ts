@@ -8,7 +8,7 @@ import { showToolbar, hideToolbar, toolbarWindow } from './lib/ControlToolbar';
 import { displayWindow, toggleDisplay, controlDisplay, getSlides, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';
 import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, getEpubPageRef, parseEpubPage, removeEpub } from './lib/EpubManager';
 
-debug();
+//debug();
 
 //Setup nucleus analytics - anonymous
 const Nucleus = require('nucleus-nodejs');

@@ -28,6 +28,23 @@ export class DisplayComponent implements OnInit {
     ngOnInit() {}
 
     ngAfterViewInit() {
+        //Listen for slides update
+        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
+            console.log('update slides')
+            //Set epub, slides
+            this.epub = epub;
+
+            //Set slides and run change detection
+            this.slideshow.active = slideshow.active;
+            this.slideshow.slides = slideshow.slides;
+            console.log(slideshow.slides);
+
+            this.changeDetector.detectChanges();
+
+            //Recalculate text height
+            this.calcTextHeight();
+        });
+
         //Listen for slide controls
         this.electronService.ipcRenderer.on('slides-control', (event, action, ...args) => {
             //Convert action to camelCase and run
@@ -41,6 +58,7 @@ export class DisplayComponent implements OnInit {
 
         //Listen for slide display options
         this.electronService.ipcRenderer.on('slides-options', (event, options) => {
+            console.log('update options');
             
             //Calculate max line number and set height
             this.settings.lineHeight = options.fontSize * 1.25;
@@ -63,7 +81,7 @@ export class DisplayComponent implements OnInit {
                 this.changeDetector.detectChanges();
                 if(this.settings.fontSize !== options.fontSize) {
                     this.slideshow.active = 0;
-                    this.electronService.ipcRenderer.send('slides-update');
+                    this.electronService.ipcRenderer.send('slides-get');
                 }
 
                 //Assign settings
@@ -72,22 +90,6 @@ export class DisplayComponent implements OnInit {
             }, 500);
         });
         this.electronService.ipcRenderer.send('slides-options');
-
-        //Listen for slides update
-        this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
-            //Set epub, slides
-            this.epub = epub;
-
-            //Set slides and run change detection
-            this.slideshow.active = slideshow.active;
-            this.slideshow.slides = slideshow.slides;
-
-            this.changeDetector.detectChanges();
-
-            //Recalculate text height
-            this.calcTextHeight();
-        });
-        this.electronService.ipcRenderer.send('slides-get');
     }
 
     calcTextHeight() {

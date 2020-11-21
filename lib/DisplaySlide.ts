@@ -67,7 +67,7 @@ export function updateDisplayOptions(updatedOptions) {
 
 export function getSlides(event) {
     //Send slides to window
-    event.sender.send('slides-update', epub, slideshow);
+    event.sender.webContents.send('slides-update', epub, slideshow);
 }
 
 export function updateSlides(event, updatedEpub = null, updatedSlideshow = null) {
