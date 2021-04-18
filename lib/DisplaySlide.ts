@@ -5,7 +5,7 @@ import { BrowserWindow, screen, app } from 'electron';
 
 let epub;
 let slideshow = { slides: [], active: 0 };
-export let displayWindow;
+export let displayWindow: BrowserWindow;
 let displayOptions = {
     fontSize: 40,
     textAlign: 'center',
@@ -85,7 +85,8 @@ export function updateSlides(event, updatedEpub = null, updatedSlideshow = null)
 export function toggleDisplay() {
     if(!displayWindow) {
         //Create window if not exists
-        let externalDisplay = screen.getAllDisplays()[displayOptions.display.selected - 1]
+        let displays = screen.getAllDisplays();
+        let externalDisplay = (displayOptions.display.selected > displays.length) ?  displays[0] : displays[displayOptions.display.selected - 1];
 
         //Create externalDisplay
         if (externalDisplay) {
@@ -104,6 +105,11 @@ export function toggleDisplay() {
             //Set as fullscreen
             displayWindow.maximize();
             displayWindow.removeMenu();
+
+            //Listen for escape
+            displayWindow.webContents.on('before-input-event', (event, input) => {
+                if (input.key == 'Escape') { toggleDisplay(); }
+            });
 
             //Electron config
             if (serve) {

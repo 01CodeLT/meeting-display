@@ -11,7 +11,7 @@ import { uploadEpub, listEpubs, listEpubsFiltered, getEpub, getEpubPageRef, pars
 //debug();
 
 //Setup nucleus analytics - anonymous
-const Nucleus = require('nucleus-nodejs');
+export const Nucleus = require('nucleus-nodejs');
 Nucleus.init('5f13691da5d05e6842655618', { autoUserId: true });
 
 //Load settings db

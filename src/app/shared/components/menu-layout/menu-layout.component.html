@@ -34,19 +34,19 @@
     <div class="content">
         <div class="ui grid container settings">
             <div class="four wide column">
-                <div class="header">Font size</div>
+                <div class="header">Text size</div>
                 <div class="ui input" title="Changing font size during slide display restarts the slideshow from the beginning!">
                     <input type="number" [(ngModel)]="settings.fontSize" (keyup)="updateOptions()" (change)="updateOptions()">
                 </div>
             </div>
             <div class="four wide column">
-                <div class="header">Font color</div>
+                <div class="header">Text color</div>
                 <div class="ui input">
                     <input type="color" [(ngModel)]="settings.fontColor" (input)="updateOptions()">
                 </div>
             </div>
             <div class="four wide column">
-                <div class="header">Font link color</div>
+                <div class="header">Links color</div>
                 <div class="ui input">
                     <input type="color" [(ngModel)]="settings.fontLinkColor" (input)="updateOptions()">
                 </div>
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="sixteen wide column pt-0">
-                <p class="message negative">Changing font size during slide display restarts the slideshow from the beginning!</p>
+                <p class="message negative">Changing text size during slide display restarts the slideshow from the beginning!</p>
             </div>
             <div class="four wide column">
                 <div class="header">Background type</div>

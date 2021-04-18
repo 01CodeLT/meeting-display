@@ -71,9 +71,9 @@ $pub-filter: blur(5px) brightness(30%);
     }
 
     .book {
-        top: 8%;
         left: 32%;
         width: 38%;
+        bottom: 8%;
         position: fixed;
         transform-style: preserve-3d;
         transform: rotateX(36deg) rotateZ(-27deg);

@@ -2,7 +2,7 @@ import fs = require('fs');
 import * as path from 'path';
 import NeDB = require('nedb');
 import cp = require('child_process');
-import { mainWindow, storagePath } from '../main';
+import { mainWindow, storagePath, Nucleus } from '../main';
 import { parse } from 'node-html-parser';
 import { dialog, app } from 'electron';
 
@@ -24,10 +24,18 @@ export function uploadEpub() {
                 importProc.on('message', ({ status, data = null }) => {
                     //Show error or insert into db
                     if(status == false) {
+                        //Log error
+                        console.error(data);
+                        
+                        //Show error
                         dialog.showMessageBox(mainWindow, {
                             message: 'An error occured whilst importing this publication...'
                         });
                     } else {
+                        //Record event
+                        Nucleus.track("EPUB_IMPORTED", { title: data.title });
+
+                        //Add to database
                         storage.insert(data);
                     }
 
@@ -43,7 +51,13 @@ export function uploadEpub() {
                 }); 
             }
         } catch(e) {
-            console.log(e);
+            //Log error
+            console.error(e);
+
+            //Show error
+            dialog.showMessageBox(mainWindow, {
+                message: 'An error occured whilst importing this publication...'
+            });
         }
     });
 }
