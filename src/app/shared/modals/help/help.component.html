@@ -1,0 +1,16 @@
+<div class="header">Help guide</div>
+<div class="content help">
+    <div class="ui grid">
+        <div class="four wide column">
+            <div class="ui vertical fluid tabular menu">
+                <a *ngFor="let content of contents.list; let i = index;" (click)="selectHelpGuide(i)"
+                    [ngClass]="{ 'active': i == contents.active }" class="item">
+                    {{ content.title }}
+                </a>
+            </div>
+        </div>
+        <div class="twelve wide stretched column">
+            <div class="ui segment content" [innerHTML]="contents.activeHtml | sanitizer : 'html'"></div>
+        </div>
+    </div>
+</div>

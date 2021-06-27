@@ -1,5 +1,23 @@
-<div class="display">
+<!-- Header menu -->
+<div *ngIf="settings.display.windowed" class="ui header menu">
+    <div class="item">
+        <img src="assets://icons/favicon.png">
+    </div>
+    <div class="right menu">
+        <a (click)="minimizeWindow()" class="item">
+            <i class="window minimize icon"></i>
+        </a>
+        <a (click)="maximizeWindow()" class="item">
+            <i class="window {{ window.maximizable ? 'maximize' : 'restore' }} icon"></i>
+        </a>
+        <a (click)="closeWindow()" class="item">
+            <i class="close icon"></i>
+        </a>
+    </div>
+</div>
 
+<!-- Main Display -->
+<div class="display">
     <div *ngIf="settings.bgType == 'pub'" class="pub-background {{ epub?.type }}">
         <div class="book">
             <img [src]="('app://' + epub?.image) | sanitizer : 'url'">    
@@ -16,5 +34,4 @@
         <img [src]="('app://' + epub?.image) | sanitizer : 'url'">
         <h5>{{ epub?.title }}</h5>
     </div>
-    
 </div>

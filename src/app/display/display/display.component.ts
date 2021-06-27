@@ -1,44 +1,55 @@
+import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Inject, NgZone } from '@angular/core';
 
 import { ElectronService } from 'ngx-electron';
+import { MenuLayoutComponent } from '../../shared/components/menu-layout/menu-layout.component';
+import { ModalService } from '../../shared/services/modal.service';
 import { Epub, SlidesService } from '../../shared/services/slides.service';
 
 @Component({
     selector: 'app-display',
     templateUrl: './display.component.html',
-    styleUrls: ['./display.component.scss']
+    styleUrls: [
+        './display.component.scss',
+        '../../shared/components/menu-layout/menu-layout.component.scss'
+    ]
 })
-export class DisplayComponent implements OnInit {
+export class DisplayComponent extends MenuLayoutComponent implements OnInit {
     
     @ViewChild('textElement') textElement: ElementRef;
     customStyleTag;
     
     epub: Epub;
     slideshow = { slides: [], active: 0 };
-    settings: any = { fontSize: 0, lineHeight: 0, numLines: 6, textHeight: 200, textY: 0 };
+    settings: any = { 
+        fontSize: 0, lineHeight: 0, numLines: 6, textHeight: 200, textY: 0,
+        display: { windowed: false }
+    };
 
     constructor(
+        zone: NgZone,
+        router: Router,
+        modalService: ModalService,
         @Inject(DOCUMENT) private doc,
-        private slidesService: SlidesService,
-        private electronService: ElectronService,
+        public slidesService: SlidesService,
+        public electronService: ElectronService,
         private changeDetector: ChangeDetectorRef
-    ) { }
+    ) {
+        super(zone, router, modalService, slidesService, electronService);
+    }
 
     ngOnInit() {}
 
     ngAfterViewInit() {
         //Listen for slides update
         this.electronService.ipcRenderer.on('slides-update', (event, epub, slideshow) => {
-            console.log('update slides')
             //Set epub, slides
             this.epub = epub;
 
             //Set slides and run change detection
             this.slideshow.active = slideshow.active;
             this.slideshow.slides = slideshow.slides;
-            console.log(slideshow.slides);
-
             this.changeDetector.detectChanges();
 
             //Recalculate text height
@@ -58,8 +69,6 @@ export class DisplayComponent implements OnInit {
 
         //Listen for slide display options
         this.electronService.ipcRenderer.on('slides-options', (event, options) => {
-            console.log('update options');
-            
             //Calculate max line number and set height
             this.settings.lineHeight = options.fontSize * 1.25;
             this.settings.numLines = Math.floor((window.innerHeight * 0.5) / this.settings.lineHeight);

@@ -1,0 +1,23 @@
+.help {
+    .menu {
+        font-size: 1.1rem;
+
+        .item {
+            font-weight: bold;
+        }
+        .item.active {
+            color: #3e96ca;
+        }
+    }
+    .content {
+        color: #333;
+        font-size: 1.1rem;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+    ::ng-deep {
+        ul, ol {
+            padding-inline-start: 1em;
+        }
+    }
+}

@@ -5,6 +5,7 @@ import { NgxElectronModule } from 'ngx-electron';
 import { SanitizerPipe } from './pipes/santizer.pipe';
 
 //NG Semantic ui
+import { ModalService } from './services/modal.service';
 import { SlidesService } from './services/slides.service';
 import { FuiDropdownModule, FuiSelectModule, FuiDimmerModule, FuiModalModule } from 'ngx-fomantic-ui';
 import { DisplayControllerComponent } from './components/display-controller/display-controller.component';
@@ -15,6 +16,7 @@ import { DisplayControllerComponent } from './components/display-controller/disp
     DisplayControllerComponent
   ],
   providers: [
+    ModalService,
     SlidesService
   ],
   imports: [

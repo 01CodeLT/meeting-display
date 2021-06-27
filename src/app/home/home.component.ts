@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { ModalService } from '../shared/services/modal.service';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private zone: NgZone,
     private router: Router,
+    private modalService: ModalService,
     private electronService: ElectronService,
     private changeDetector: ChangeDetectorRef
   ) { }
@@ -23,9 +25,15 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.electronService.ipcRenderer.send('epub-list');
     this.electronService.ipcRenderer.on('epub-list', (event, epubs) => {
+      //Set epubs
       this.epubs = epubs;
       this.loading = false;
       this.changeDetector.detectChanges();
+
+      //If no epubs open help
+      this.zone.run(() => {
+        if (epubs.length == 0) { this.modalService.open('help'); }
+      });
     });
   }
 
