@@ -76,7 +76,7 @@ export function updateDisplayOptions(updatedOptions: Settings) {
 
             //Change to windowed mode?
             displayWindow.setFullScreen(!updatedOptions.display.windowed);
-            if (updatedOptions.display.windowed == false) { console.log('maximising'); displayWindow.maximize(); }
+            if (updatedOptions.display.windowed == false) displayWindow.maximize();
         }
 
         //Update options
@@ -115,6 +115,7 @@ export function toggleDisplay() {
         //Create externalDisplay
         if (externalDisplay) {
             displayWindow = new BrowserWindow({
+                title: 'Meeting display',
                 x: externalDisplay.bounds.x,
                 y: externalDisplay.bounds.y,
                 webPreferences: {
@@ -123,12 +124,16 @@ export function toggleDisplay() {
                     allowRunningInsecureContent: (serve) ? true : false,
                 },
                 fullscreen: !displayOptions.display.windowed,
-                title: 'Meeting display',
                 frame: false
             });
 
+            //Emitted when window closed
+            displayWindow.on('closed', () => {
+                displayWindow = null;
+            });
+
             //Set as fullscreen
-            displayWindow.maximize();
+            if (displayOptions.display.windowed == false) displayWindow.maximize();
 
             //Listen for escape
             displayWindow.webContents.on('before-input-event', (event, input) => {

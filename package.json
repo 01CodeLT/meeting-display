@@ -1,6 +1,6 @@
 {
   "name": "meeting-display",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Basic application for displaying books & magazines in epub format from the jw website in congregation meetings.",
   "author": {
     "name": "Luke Tinnion",
@@ -59,7 +59,7 @@
     "conventional-changelog-cli": "2.0.34",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
-    "electron": "9.0.4",
+    "electron": "9.4.0",
     "electron-builder": "22.7.0",
     "electron-reload": "1.5.0",
     "eslint": "7.3.0",

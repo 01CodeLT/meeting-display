@@ -40,9 +40,11 @@ export class MenuLayoutComponent implements OnInit {
   maximizeWindow() {
     let mainWindow = this.electronService.remote.getCurrentWindow();
     if (mainWindow.isMaximized()) {
+      console.log('restore');
       mainWindow.restore();
       this.window.maximizable = true;
     } else {
+      console.log('maximize');
       mainWindow.maximize();
       this.window.maximizable = false;
     }

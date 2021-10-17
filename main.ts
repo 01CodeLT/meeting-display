@@ -2,7 +2,7 @@ import * as url from 'url';
 import * as path from 'path';
 import debug = require('electron-debug');
 import { autoUpdater } from 'electron-updater';
-import { app, BrowserWindow, screen, protocol, ipcMain, dialog, remote } from 'electron';
+import { app, BrowserWindow, screen, protocol, ipcMain, dialog } from 'electron';
 
 import { showToolbar, hideToolbar, toolbarWindow } from './lib/ControlToolbar';
 import { displayWindow, toggleDisplay, controlDisplay, getSlides, updateSlides, updateDisplayOptions } from './lib/DisplaySlide';

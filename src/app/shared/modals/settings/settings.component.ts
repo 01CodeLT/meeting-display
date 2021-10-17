@@ -1,11 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SlidesService } from '../../../shared/services/slides.service';
 import { ElectronService } from 'ngx-electron';
+import { FuiModal } from 'ngx-fomantic-ui';
 
 @Component({
     selector: 'settings',
     styleUrls: ['./settings.component.scss'],
     templateUrl: './settings.component.html',
+    providers: [FuiModal]
 })
 
 export class SettingsComponent implements OnInit {
@@ -27,7 +29,8 @@ export class SettingsComponent implements OnInit {
     constructor(
         public slidesService: SlidesService,
         private electronService: ElectronService,
-        private changeDetector: ChangeDetectorRef
+        private changeDetector: ChangeDetectorRef,
+        public modal: FuiModal<string, string>
     ) { }
 
     ngOnInit() {
@@ -50,6 +53,7 @@ import { SharedModule } from '../../shared.module';
 
 @NgModule({
     declarations: [SettingsComponent],
-    imports: [CommonModule, SharedModule]
+    imports: [CommonModule, SharedModule],
+    providers: []
 })
 class SettingsModule { }

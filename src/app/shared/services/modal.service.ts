@@ -1,5 +1,5 @@
 import { Injectable, ComponentFactoryResolver, Injector } from '@angular/core';
-import { FuiModalService, TemplateModalConfig, ModalTemplate, ComponentModalConfig } from 'ngx-fomantic-ui';
+import { FuiModalService, ComponentModalConfig } from 'ngx-fomantic-ui';
 
 @Injectable()
 export class ModalService {
