@@ -32,3 +32,6 @@ Home screen           |  Publication display
 Select scriptures           |  Publication display
 :-------------------------:|:-------------------------:
 ![bible-controller](https://user-images.githubusercontent.com/11212855/89132175-24158200-d50a-11ea-8864-47d1bf237684.PNG) | ![bible-display](https://user-images.githubusercontent.com/11212855/89132118-a2bdef80-d509-11ea-9920-5cb1116f7838.PNG)
+
+### Contributing
+Any contributions to this project would be greatly appreciated! Information about how to run it locally is available here https://github.com/01CodeLT/meeting-display/issues/3
